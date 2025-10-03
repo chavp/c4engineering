@@ -1,0 +1,22 @@
+{
+  "id": "frontend-app",
+  "name": "Frontend Application",
+  "description": "Main React application providing the user interface",
+  "type": "website",
+  "owner": "Frontend Team",
+  "repository": "https://github.com/company/frontend-app",
+  "documentation": "https://docs.company.com/frontend-app",
+  "apiSpec": null,
+  "tags": ["react", "frontend", "ui"],
+  "lifecycle": "production",
+  "system": "user-management",
+  "dependsOn": ["user-service", "notification-service"],
+  "providesApis": [],
+  "consumesApis": ["user-api", "notification-api"],
+  "metadata": {
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-01-10T12:00:00Z",
+    "version": "3.2.1",
+    "healthCheckUrl": "https://app.company.com/health"
+  }
+}

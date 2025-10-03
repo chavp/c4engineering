@@ -1,0 +1,637 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "C4Engineering Diagram API",
+    "description": "REST API for managing C4 model architecture diagrams with real-time collaboration",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000/api",
+      "description": "Local development server"
+    }
+  ],
+  "paths": {
+    "/diagrams": {
+      "get": {
+        "summary": "List all diagrams",
+        "description": "Retrieve all diagrams with optional filtering",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "description": "Filter by diagram type",
+            "schema": {
+              "type": "string",
+              "enum": ["context", "container", "component", "code"]
+            }
+          },
+          {
+            "name": "system",
+            "in": "query",
+            "description": "Filter by system",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of diagrams",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DiagramSummary"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create new diagram",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDiagramRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Diagram created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Diagram"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/diagrams/{diagramId}": {
+      "get": {
+        "summary": "Get diagram by ID",
+        "parameters": [
+          {
+            "name": "diagramId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Complete diagram with elements and relationships",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Diagram"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Diagram not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update diagram",
+        "parameters": [
+          {
+            "name": "diagramId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateDiagramRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Diagram updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Diagram"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete diagram",
+        "parameters": [
+          {
+            "name": "diagramId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Diagram deleted successfully"
+          }
+        }
+      }
+    },
+    "/diagrams/{diagramId}/elements": {
+      "post": {
+        "summary": "Add element to diagram",
+        "parameters": [
+          {
+            "name": "diagramId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DiagramElement"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Element added successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiagramElement"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/diagrams/{diagramId}/elements/{elementId}": {
+      "put": {
+        "summary": "Update diagram element",
+        "parameters": [
+          {
+            "name": "diagramId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "elementId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateElementRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Element updated successfully"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove element from diagram",
+        "parameters": [
+          {
+            "name": "diagramId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "elementId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Element removed successfully"
+          }
+        }
+      }
+    },
+    "/diagrams/{diagramId}/relationships": {
+      "post": {
+        "summary": "Add relationship to diagram",
+        "parameters": [
+          {
+            "name": "diagramId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DiagramRelationship"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Relationship added successfully"
+          }
+        }
+      }
+    },
+    "/diagrams/{diagramId}/export": {
+      "get": {
+        "summary": "Export diagram",
+        "parameters": [
+          {
+            "name": "diagramId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": ["png", "svg", "pdf"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Exported diagram file",
+            "content": {
+              "image/png": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "image/svg+xml": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/pdf": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Diagram": {
+        "type": "object",
+        "required": ["id", "name", "type"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["context", "container", "component", "code"]
+          },
+          "system": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "elements": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DiagramElement"
+            }
+          },
+          "relationships": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DiagramRelationship"
+            }
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/DiagramMetadata"
+          }
+        }
+      },
+      "DiagramSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["context", "container", "component", "code"]
+          },
+          "system": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "elementCount": {
+            "type": "integer"
+          },
+          "relationshipCount": {
+            "type": "integer"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "DiagramElement": {
+        "type": "object",
+        "required": ["id", "type", "name"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["person", "system", "external-system", "container", "component", "code-element"]
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "technology": {
+            "type": "string"
+          },
+          "position": {
+            "$ref": "#/components/schemas/Position"
+          },
+          "size": {
+            "$ref": "#/components/schemas/Size"
+          },
+          "style": {
+            "$ref": "#/components/schemas/ElementStyle"
+          },
+          "properties": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "DiagramRelationship": {
+        "type": "object",
+        "required": ["id", "sourceId", "targetId"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "sourceId": {
+            "type": "string"
+          },
+          "targetId": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "technology": {
+            "type": "string"
+          },
+          "style": {
+            "$ref": "#/components/schemas/RelationshipStyle"
+          }
+        }
+      },
+      "Position": {
+        "type": "object",
+        "required": ["x", "y"],
+        "properties": {
+          "x": {
+            "type": "number"
+          },
+          "y": {
+            "type": "number"
+          }
+        }
+      },
+      "Size": {
+        "type": "object",
+        "required": ["width", "height"],
+        "properties": {
+          "width": {
+            "type": "number"
+          },
+          "height": {
+            "type": "number"
+          }
+        }
+      },
+      "ElementStyle": {
+        "type": "object",
+        "properties": {
+          "backgroundColor": {
+            "type": "string"
+          },
+          "color": {
+            "type": "string"
+          },
+          "borderColor": {
+            "type": "string"
+          },
+          "borderWidth": {
+            "type": "number"
+          },
+          "shape": {
+            "type": "string",
+            "enum": ["rectangle", "cylinder", "person", "system"]
+          }
+        }
+      },
+      "RelationshipStyle": {
+        "type": "object",
+        "properties": {
+          "lineStyle": {
+            "type": "string",
+            "enum": ["solid", "dashed", "dotted"]
+          },
+          "arrowStyle": {
+            "type": "string",
+            "enum": ["filled", "open", "none"]
+          },
+          "color": {
+            "type": "string"
+          },
+          "width": {
+            "type": "number"
+          }
+        }
+      },
+      "DiagramMetadata": {
+        "type": "object",
+        "properties": {
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "parentDiagram": {
+            "type": "string"
+          },
+          "childDiagrams": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "CreateDiagramRequest": {
+        "type": "object",
+        "required": ["name", "type"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["context", "container", "component", "code"]
+          },
+          "system": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "parentDiagram": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateDiagramRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "elements": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DiagramElement"
+            }
+          },
+          "relationships": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DiagramRelationship"
+            }
+          }
+        }
+      },
+      "UpdateElementRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "technology": {
+            "type": "string"
+          },
+          "position": {
+            "$ref": "#/components/schemas/Position"
+          },
+          "size": {
+            "$ref": "#/components/schemas/Size"
+          },
+          "style": {
+            "$ref": "#/components/schemas/ElementStyle"
+          }
+        }
+      }
+    }
+  }
+}

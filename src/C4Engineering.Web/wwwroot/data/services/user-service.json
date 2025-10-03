@@ -1,0 +1,22 @@
+{
+  "id": "user-service",
+  "name": "User Service",
+  "description": "Core user management service providing authentication and profile management",
+  "type": "service",
+  "owner": "Backend Team",
+  "repository": "https://github.com/company/user-service",
+  "documentation": "https://docs.company.com/user-service",
+  "apiSpec": "https://api.company.com/user-service/swagger",
+  "tags": ["authentication", "users", "microservice"],
+  "lifecycle": "production",
+  "system": "user-management",
+  "dependsOn": [],
+  "providesApis": ["user-api", "auth-api"],
+  "consumesApis": ["notification-api"],
+  "metadata": {
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-01-10T12:00:00Z",
+    "version": "2.1.0",
+    "healthCheckUrl": "https://api.company.com/user-service/health"
+  }
+}

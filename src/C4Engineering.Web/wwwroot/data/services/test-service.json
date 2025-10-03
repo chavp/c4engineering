@@ -1,0 +1,25 @@
+{
+  "id": "test-service",
+  "name": "Test Service",
+  "description": "A test service for contract testing",
+  "type": 0,
+  "owner": "test-team",
+  "repository": "https://github.com/test/test-service",
+  "documentation": null,
+  "apiSpec": null,
+  "tags": [
+    "test",
+    "contract"
+  ],
+  "lifecycle": 1,
+  "system": null,
+  "dependsOn": [],
+  "providesApis": [],
+  "consumesApis": [],
+  "metadata": {
+    "createdAt": "2025-10-01T09:36:57.3059265Z",
+    "updatedAt": "2025-10-01T09:36:57.3059376Z",
+    "version": null,
+    "healthCheckUrl": null
+  }
+}

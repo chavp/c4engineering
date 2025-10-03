@@ -1,0 +1,87 @@
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="text-center">
+    <h1 class="display-4">C4Engineering Platform</h1>
+    <p class="lead">Platform Engineering MVP with Backstage integration and C4 model visualization</p>
+</div>
+
+<div class="row">
+    <div class="col-md-6 col-lg-3 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">Service Catalog</h5>
+                <p class="card-text">Discover and manage services across your organization</p>
+                <a href="@Url.Action("Services", "Home")" class="btn btn-primary">View Services</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 col-lg-3 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">Architecture</h5>
+                <p class="card-text">Visualize system architecture with C4 model diagrams</p>
+                <a href="@Url.Action("Architecture", "Home")" class="btn btn-primary">View Diagrams</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 col-lg-3 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">Pipelines</h5>
+                <p class="card-text">Configure and manage build/deployment pipelines</p>
+                <a href="@Url.Action("Pipelines", "Home")" class="btn btn-primary">View Pipelines</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 col-lg-3 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">Deployments</h5>
+                <p class="card-text">Monitor and manage Docker Desktop deployments</p>
+                <a href="@Url.Action("Deployments", "Home")" class="btn btn-primary">View Deployments</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <a href="/api-docs" class="btn btn-outline-primary btn-block mb-2">API Documentation</a>
+                    </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-outline-success btn-block mb-2" onclick="initializeSampleData()">Initialize Sample Data</button>
+                    </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-outline-info btn-block mb-2" onclick="checkDockerStatus()">Check Docker Status</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function initializeSampleData() {
+            // TODO: Implement sample data initialization
+            alert('Sample data initialization - Coming soon!');
+        }
+        
+        function checkDockerStatus() {
+            // TODO: Implement Docker status check
+            alert('Docker status check - Coming soon!');
+        }
+    </script>
+}

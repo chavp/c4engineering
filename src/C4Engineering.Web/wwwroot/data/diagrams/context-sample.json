@@ -1,0 +1,118 @@
+{
+  "id": "context-sample",
+  "name": "E-commerce Platform - Context Diagram",
+  "description": "High-level view of the e-commerce platform and its interactions with users and external systems",
+  "type": "Context",
+  "system": "user-management",
+  "elements": [
+    {
+      "id": "customer",
+      "type": "person",
+      "name": "Customer",
+      "description": "A customer of the e-commerce platform",
+      "x": 100,
+      "y": 50,
+      "width": 120,
+      "height": 100,
+      "color": "#1168bd"
+    },
+    {
+      "id": "admin",
+      "type": "person", 
+      "name": "Administrator",
+      "description": "System administrator",
+      "x": 400,
+      "y": 50,
+      "width": 120,
+      "height": 100,
+      "color": "#1168bd"
+    },
+    {
+      "id": "ecommerce-system",
+      "type": "system",
+      "name": "E-commerce Platform",
+      "description": "Allows customers to browse products, place orders, and manage their accounts",
+      "x": 250,
+      "y": 200,
+      "width": 180,
+      "height": 120,
+      "color": "#999999"
+    },
+    {
+      "id": "payment-system",
+      "type": "external-system",
+      "name": "Payment Gateway",
+      "description": "External payment processing system",
+      "x": 50,
+      "y": 350,
+      "width": 180,
+      "height": 120,
+      "color": "#666666"
+    },
+    {
+      "id": "email-system",
+      "type": "external-system",
+      "name": "Email Service",
+      "description": "External email service for notifications",
+      "x": 300,
+      "y": 350,
+      "width": 180,
+      "height": 120,
+      "color": "#666666"
+    },
+    {
+      "id": "shipping-system",
+      "type": "external-system",
+      "name": "Shipping Provider",
+      "description": "External shipping and logistics provider",
+      "x": 550,
+      "y": 350,
+      "width": 180,
+      "height": 120,
+      "color": "#666666"
+    }
+  ],
+  "relationships": [
+    {
+      "id": "customer-to-system",
+      "from": "customer",
+      "to": "ecommerce-system",
+      "label": "Browses products, places orders",
+      "type": "uses"
+    },
+    {
+      "id": "admin-to-system",
+      "from": "admin",
+      "to": "ecommerce-system",
+      "label": "Manages products and orders",
+      "type": "uses"
+    },
+    {
+      "id": "system-to-payment",
+      "from": "ecommerce-system",
+      "to": "payment-system",
+      "label": "Processes payments",
+      "type": "uses"
+    },
+    {
+      "id": "system-to-email",
+      "from": "ecommerce-system",
+      "to": "email-system",
+      "label": "Sends notifications",
+      "type": "uses"
+    },
+    {
+      "id": "system-to-shipping",
+      "from": "ecommerce-system",
+      "to": "shipping-system",
+      "label": "Arranges shipping",
+      "type": "uses"
+    }
+  ],
+  "metadata": {
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-01-10T12:00:00Z",
+    "version": "1.0",
+    "isCollaborative": true
+  }
+}

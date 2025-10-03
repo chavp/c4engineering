@@ -1,0 +1,656 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "C4Engineering Pipeline API",
+    "description": "REST API for managing build and deployment pipelines with Docker Desktop integration",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000/api",
+      "description": "Local development server"
+    }
+  ],
+  "paths": {
+    "/pipelines": {
+      "get": {
+        "summary": "List all pipelines",
+        "parameters": [
+          {
+            "name": "serviceId",
+            "in": "query",
+            "description": "Filter by service ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of pipeline configurations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PipelineSummary"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create new pipeline",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePipelineRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Pipeline created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PipelineConfiguration"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pipelines/{pipelineId}": {
+      "get": {
+        "summary": "Get pipeline by ID",
+        "parameters": [
+          {
+            "name": "pipelineId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pipeline configuration details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PipelineConfiguration"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update pipeline configuration",
+        "parameters": [
+          {
+            "name": "pipelineId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePipelineRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Pipeline updated successfully"
+          }
+        }
+      }
+    },
+    "/pipelines/{pipelineId}/execute": {
+      "post": {
+        "summary": "Execute pipeline",
+        "parameters": [
+          {
+            "name": "pipelineId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExecutePipelineRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Pipeline execution started",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PipelineExecution"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/executions": {
+      "get": {
+        "summary": "List pipeline executions",
+        "parameters": [
+          {
+            "name": "pipelineId",
+            "in": "query",
+            "description": "Filter by pipeline ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter by execution status",
+            "schema": {
+              "type": "string",
+              "enum": ["queued", "running", "success", "failed", "cancelled"]
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limit number of results",
+            "schema": {
+              "type": "integer",
+              "default": 50
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of pipeline executions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PipelineExecution"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/executions/{executionId}": {
+      "get": {
+        "summary": "Get execution details",
+        "parameters": [
+          {
+            "name": "executionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Execution details with logs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PipelineExecution"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/executions/{executionId}/logs": {
+      "get": {
+        "summary": "Get execution logs",
+        "parameters": [
+          {
+            "name": "executionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "stageId",
+            "in": "query",
+            "description": "Filter logs by stage",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Execution logs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LogEntry"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/executions/{executionId}/cancel": {
+      "post": {
+        "summary": "Cancel running execution",
+        "parameters": [
+          {
+            "name": "executionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Execution cancelled successfully"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PipelineConfiguration": {
+        "type": "object",
+        "required": ["id", "serviceId", "name", "stages"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "serviceId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "stages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PipelineStage"
+            }
+          },
+          "triggers": {
+            "$ref": "#/components/schemas/PipelineTriggers"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/PipelineMetadata"
+          }
+        }
+      },
+      "PipelineSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "serviceId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "stageCount": {
+            "type": "integer"
+          },
+          "lastExecution": {
+            "$ref": "#/components/schemas/ExecutionSummary"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "PipelineStage": {
+        "type": "object",
+        "required": ["id", "name", "type"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["build", "test", "docker-build", "docker-deploy", "custom"]
+          },
+          "commands": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "workingDirectory": {
+            "type": "string"
+          },
+          "dockerFile": {
+            "type": "string"
+          },
+          "imageName": {
+            "type": "string"
+          },
+          "imageTag": {
+            "type": "string"
+          },
+          "containerName": {
+            "type": "string"
+          },
+          "ports": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "environment": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "volumes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "buildArgs": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "healthCheck": {
+            "$ref": "#/components/schemas/HealthCheck"
+          },
+          "timeout": {
+            "type": "integer",
+            "description": "Timeout in seconds"
+          },
+          "retryCount": {
+            "type": "integer"
+          }
+        }
+      },
+      "PipelineTriggers": {
+        "type": "object",
+        "properties": {
+          "manual": {
+            "type": "boolean"
+          },
+          "onDiagramChange": {
+            "type": "boolean"
+          },
+          "onRepositoryChange": {
+            "type": "boolean"
+          },
+          "scheduled": {
+            "type": "string",
+            "description": "Cron expression for scheduled execution"
+          }
+        }
+      },
+      "PipelineExecution": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "pipelineId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["queued", "running", "success", "failed", "cancelled"]
+          },
+          "startedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "completedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "duration": {
+            "type": "integer",
+            "description": "Duration in seconds"
+          },
+          "triggeredBy": {
+            "type": "string"
+          },
+          "buildNumber": {
+            "type": "integer"
+          },
+          "stages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StageExecution"
+            }
+          }
+        }
+      },
+      "StageExecution": {
+        "type": "object",
+        "properties": {
+          "stageId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["queued", "running", "success", "failed", "skipped"]
+          },
+          "startedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "completedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "duration": {
+            "type": "integer"
+          },
+          "logs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "artifacts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "deploymentUrl": {
+            "type": "string"
+          }
+        }
+      },
+      "ExecutionSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["queued", "running", "success", "failed", "cancelled"]
+          },
+          "startedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "duration": {
+            "type": "integer"
+          },
+          "buildNumber": {
+            "type": "integer"
+          }
+        }
+      },
+      "HealthCheck": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "interval": {
+            "type": "integer",
+            "description": "Interval in seconds"
+          },
+          "timeout": {
+            "type": "integer",
+            "description": "Timeout in seconds"
+          },
+          "retries": {
+            "type": "integer"
+          }
+        }
+      },
+      "LogEntry": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "level": {
+            "type": "string",
+            "enum": ["debug", "info", "warning", "error"]
+          },
+          "message": {
+            "type": "string"
+          },
+          "stageId": {
+            "type": "string"
+          }
+        }
+      },
+      "PipelineMetadata": {
+        "type": "object",
+        "properties": {
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string"
+          }
+        }
+      },
+      "CreatePipelineRequest": {
+        "type": "object",
+        "required": ["serviceId", "name", "stages"],
+        "properties": {
+          "serviceId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "stages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PipelineStage"
+            }
+          },
+          "triggers": {
+            "$ref": "#/components/schemas/PipelineTriggers"
+          }
+        }
+      },
+      "UpdatePipelineRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "stages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PipelineStage"
+            }
+          },
+          "triggers": {
+            "$ref": "#/components/schemas/PipelineTriggers"
+          }
+        }
+      },
+      "ExecutePipelineRequest": {
+        "type": "object",
+        "properties": {
+          "triggeredBy": {
+            "type": "string"
+          },
+          "parameters": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

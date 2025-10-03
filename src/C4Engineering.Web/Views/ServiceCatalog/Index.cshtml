@@ -1,0 +1,278 @@
+@model IEnumerable<C4Engineering.Web.Models.ServiceCatalog.ServiceSummary>
+@{
+    ViewData["Title"] = "Service Catalog";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h2">Service Catalog</h1>
+    <div>
+        <div class="btn-group me-2" role="group">
+            <input type="radio" class="btn-check" name="viewMode" id="gridView" value="grid" checked>
+            <label class="btn btn-outline-primary" for="gridView">
+                <i class="bi bi-grid-3x3-gap"></i> Grid
+            </label>
+            <input type="radio" class="btn-check" name="viewMode" id="graphView" value="graph">
+            <label class="btn btn-outline-primary" for="graphView">
+                <i class="bi bi-diagram-3"></i> Graph
+            </label>
+        </div>
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addServiceModal">
+            <i class="bi bi-plus-circle"></i> Add Service
+        </button>
+        <a href="/api/services" class="btn btn-outline-info" target="_blank">
+            <i class="bi bi-code"></i> API
+        </a>
+    </div>
+</div>
+
+<!-- View Toggle and Filters -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form id="serviceFilters" class="row g-3">
+            <div class="col-md-3">
+                <label for="teamFilter" class="form-label">Team</label>
+                <select id="teamFilter" class="form-select">
+                    <option value="">All Teams</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="typeFilter" class="form-label">Type</label>
+                <select id="typeFilter" class="form-select">
+                    <option value="">All Types</option>
+                    <option value="Service">Service</option>
+                    <option value="Library">Library</option>
+                    <option value="Website">Website</option>
+                    <option value="Database">Database</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="statusFilter" class="form-label">Lifecycle</label>
+                <select id="statusFilter" class="form-select">
+                    <option value="">All Lifecycles</option>
+                    <option value="Experimental">Experimental</option>
+                    <option value="Development">Development</option>
+                    <option value="Production">Production</option>
+                    <option value="Deprecated">Deprecated</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="searchFilter" class="form-label">Search</label>
+                <input type="text" id="searchFilter" class="form-control" placeholder="Search services...">
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Grid View Container -->
+<div id="gridViewContainer">
+    <div id="servicesContainer">
+        <div id="servicesGrid" class="row">
+            <!-- Services will be loaded here by JavaScript -->
+        </div>
+        
+        <!-- Loading state -->
+        <div id="loadingSpinner" class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading services...</span>
+            </div>
+        </div>
+        
+        <!-- Empty state -->
+        <div id="emptyState" class="text-center py-5" style="display: none;">
+            <div class="mb-3">
+                <i class="bi bi-inbox display-1 text-muted"></i>
+            </div>
+            <h5 class="text-muted">No services found</h5>
+            <p class="text-muted">Try adjusting your filters or add a new service to get started.</p>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addServiceModal">
+                Add Your First Service
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Graph View Container -->
+<div id="graphViewContainer" style="display: none;">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h6 class="card-title mb-0">Service Dependency Graph</h6>
+            <div class="btn-group btn-group-sm" role="group">
+                <button type="button" class="btn btn-outline-secondary" id="resetGraphView">
+                    <i class="bi bi-arrow-clockwise"></i> Reset View
+                </button>
+                <button type="button" class="btn btn-outline-primary" id="centerGraph">
+                    <i class="bi bi-bullseye"></i> Center
+                </button>
+                <button type="button" class="btn btn-outline-info" id="exportGraph">
+                    <i class="bi bi-download"></i> Export
+                </button>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div id="dependencyGraph" style="min-height: 600px; position: relative;">
+                <!-- D3.js dependency graph will be rendered here -->
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="d-flex align-items-center text-muted small">
+                        <div class="me-4">
+                            <div class="d-inline-block me-1" style="width: 12px; height: 2px; background-color: #6c757d;"></div>
+                            Dependencies
+                        </div>
+                        <div class="me-4">
+                            <div class="d-inline-block me-1" style="width: 12px; height: 2px; background-color: #0d6efd;"></div>
+                            API Usage
+                        </div>
+                        <div>
+                            <span>Click nodes for details • Drag to reposition • Scroll to zoom</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-end">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="showLabels" checked>
+                        <label class="form-check-label" for="showLabels">
+                            Show Labels
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Service Modal -->
+<div class="modal fade" id="addServiceModal" tabindex="-1" aria-labelledby="addServiceModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addServiceModalLabel">Add New Service</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="addServiceForm">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="serviceName" class="form-label">Service Name *</label>
+                                <input type="text" class="form-control" id="serviceName" name="name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="serviceType" class="form-label">Type *</label>
+                                <select class="form-select" id="serviceType" name="type" required>
+                                    <option value="">Select type...</option>
+                                    <option value="Service">Service</option>
+                                    <option value="Library">Library</option>
+                                    <option value="Website">Website</option>
+                                    <option value="Database">Database</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="serviceDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="serviceDescription" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="serviceOwner" class="form-label">Owner Team *</label>
+                                <input type="text" class="form-control" id="serviceOwner" name="owner" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="serviceLifecycle" class="form-label">Lifecycle</label>
+                                <select class="form-select" id="serviceLifecycle" name="lifecycle">
+                                    <option value="Experimental">Experimental</option>
+                                    <option value="Development">Development</option>
+                                    <option value="Production" selected>Production</option>
+                                    <option value="Deprecated">Deprecated</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="serviceRepository" class="form-label">Repository URL</label>
+                                <input type="url" class="form-control" id="serviceRepository" name="repository">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="serviceDocumentation" class="form-label">Documentation URL</label>
+                                <input type="url" class="form-control" id="serviceDocumentation" name="documentation">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="serviceTags" class="form-label">Tags</label>
+                        <input type="text" class="form-control" id="serviceTags" name="tags" placeholder="Comma-separated tags">
+                        <div class="form-text">Enter tags separated by commas (e.g., "api, microservice, payment")</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="serviceSystem" class="form-label">System</label>
+                        <input type="text" class="form-control" id="serviceSystem" name="system" placeholder="System or domain this service belongs to">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success">Add Service</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="successToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                Service created successfully!
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+    <div id="errorToast" class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                <span id="errorMessage">An error occurred.</span>
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="module" src="~/js/service-catalog-enhanced.js"></script>
+}
+
+@section Styles {
+    <style>
+        .service-node {
+            transition: all 0.2s ease;
+        }
+        
+        .service-node:hover {
+            filter: brightness(1.1);
+        }
+        
+        .service-link {
+            transition: all 0.2s ease;
+        }
+        
+        #dependencyGraph {
+            background: #f8f9fa;
+        }
+        
+        .node-icon {
+            font-family: 'bootstrap-icons' !important;
+        }
+    </style>
+}

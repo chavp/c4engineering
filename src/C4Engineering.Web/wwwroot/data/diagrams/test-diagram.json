@@ -1,0 +1,17 @@
+{
+  "id": "test-diagram",
+  "name": "Test System Context",
+  "type": 0,
+  "system": "test-system",
+  "description": "A test diagram for contract testing",
+  "elements": [],
+  "relationships": [],
+  "metadata": {
+    "createdAt": "2025-10-01T09:43:28.7034654Z",
+    "updatedAt": "2025-10-01T09:43:28.7034824Z",
+    "createdBy": null,
+    "version": "1.0",
+    "parentDiagram": null,
+    "childDiagrams": []
+  }
+}

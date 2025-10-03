@@ -1,0 +1,22 @@
+{
+  "id": "notification-service",
+  "name": "Notification Service",
+  "description": "Email and push notification service for all platform communications",
+  "type": "service",
+  "owner": "Platform Team",
+  "repository": "https://github.com/company/notification-service",
+  "documentation": "https://docs.company.com/notification-service",
+  "apiSpec": "https://api.company.com/notification-service/swagger",
+  "tags": ["notifications", "email", "messaging"],
+  "lifecycle": "production",
+  "system": "communication",
+  "dependsOn": [],
+  "providesApis": ["notification-api"],
+  "consumesApis": [],
+  "metadata": {
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-01-10T12:00:00Z",
+    "version": "1.5.2",
+    "healthCheckUrl": "https://api.company.com/notification-service/health"
+  }
+}

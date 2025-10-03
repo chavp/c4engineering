@@ -1,0 +1,114 @@
+{
+  "id": "payment-system-context",
+  "name": "Updated Payment System Context",
+  "type": "context",
+  "system": "payment-system",
+  "description": "Updated description for payment system context diagram",
+  "elements": [
+    {
+      "id": "customer",
+      "type": "person",
+      "name": "Customer",
+      "description": "A customer of the e-commerce platform",
+      "technology": null,
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "size": {
+        "width": 120,
+        "height": 80
+      },
+      "style": {
+        "backgroundColor": null,
+        "color": null,
+        "borderColor": null,
+        "borderWidth": null,
+        "shape": null
+      },
+      "properties": {}
+    },
+    {
+      "id": "payment-system",
+      "type": "system",
+      "name": "Updated Payment System",
+      "description": "Updated payment system description",
+      "technology": "C# .NET, PostgreSQL",
+      "position": {
+        "x": 200,
+        "y": 150
+      },
+      "size": {
+        "width": 150,
+        "height": 100
+      },
+      "style": {
+        "backgroundColor": null,
+        "color": null,
+        "borderColor": null,
+        "borderWidth": null,
+        "shape": null
+      },
+      "properties": {}
+    },
+    {
+      "id": "external-gateway",
+      "type": "externalSystem",
+      "name": "Payment Gateway",
+      "description": "External payment processing service",
+      "technology": "Stripe API",
+      "position": {
+        "x": 500,
+        "y": 100
+      },
+      "size": {
+        "width": 120,
+        "height": 80
+      },
+      "style": {
+        "backgroundColor": null,
+        "color": null,
+        "borderColor": null,
+        "borderWidth": null,
+        "shape": null
+      },
+      "properties": {}
+    }
+  ],
+  "relationships": [
+    {
+      "id": "customer-payment",
+      "sourceId": "customer",
+      "targetId": "payment-system",
+      "description": "Makes payments using",
+      "technology": "HTTPS/REST",
+      "style": {
+        "lineStyle": null,
+        "arrowStyle": null,
+        "color": null,
+        "width": null
+      }
+    },
+    {
+      "id": "payment-gateway",
+      "sourceId": "payment-system",
+      "targetId": "external-gateway",
+      "description": "Processes payments via",
+      "technology": "HTTPS/REST API",
+      "style": {
+        "lineStyle": null,
+        "arrowStyle": null,
+        "color": null,
+        "width": null
+      }
+    }
+  ],
+  "metadata": {
+    "createdAt": "2025-01-10T10:00:00Z",
+    "updatedAt": "2025-10-03T02:52:05.452055Z",
+    "createdBy": "system",
+    "version": "1.0",
+    "parentDiagram": null,
+    "childDiagrams": []
+  }
+}

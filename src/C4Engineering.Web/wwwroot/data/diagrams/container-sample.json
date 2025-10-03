@@ -1,0 +1,186 @@
+{
+  "id": "container-sample",
+  "name": "User Service - Container Diagram",
+  "description": "Container view of the user management service showing internal architecture",
+  "type": "Container",
+  "system": "user-management",
+  "elements": [
+    {
+      "id": "user",
+      "type": "person",
+      "name": "User",
+      "description": "A user of the system",
+      "x": 300,
+      "y": 50,
+      "width": 120,
+      "height": 100,
+      "color": "#1168bd"
+    },
+    {
+      "id": "web-app",
+      "type": "web-app",
+      "name": "Web Application",
+      "description": "React-based user interface",
+      "x": 200,
+      "y": 200,
+      "width": 160,
+      "height": 100,
+      "color": "#20c997"
+    },
+    {
+      "id": "mobile-app",
+      "type": "mobile-app",
+      "name": "Mobile App",
+      "description": "Native mobile application",
+      "x": 400,
+      "y": 200,
+      "width": 140,
+      "height": 100,
+      "color": "#6f42c1"
+    },
+    {
+      "id": "api-gateway",
+      "type": "api",
+      "name": "API Gateway",
+      "description": "Routes requests to microservices",
+      "x": 300,
+      "y": 350,
+      "width": 140,
+      "height": 80,
+      "color": "#fd7e14"
+    },
+    {
+      "id": "auth-service",
+      "type": "container",
+      "name": "Authentication Service",
+      "description": "Handles user authentication and authorization",
+      "x": 100,
+      "y": 480,
+      "width": 160,
+      "height": 100,
+      "color": "#1168bd"
+    },
+    {
+      "id": "user-service",
+      "type": "container",
+      "name": "User Service",
+      "description": "Manages user profiles and data",
+      "x": 300,
+      "y": 480,
+      "width": 160,
+      "height": 100,
+      "color": "#1168bd"
+    },
+    {
+      "id": "notification-service",
+      "type": "container",
+      "name": "Notification Service",
+      "description": "Sends emails and push notifications",
+      "x": 500,
+      "y": 480,
+      "width": 160,
+      "height": 100,
+      "color": "#1168bd"
+    },
+    {
+      "id": "user-database",
+      "type": "database",
+      "name": "User Database",
+      "description": "Stores user data and profiles",
+      "x": 300,
+      "y": 620,
+      "width": 120,
+      "height": 80,
+      "color": "#198754"
+    },
+    {
+      "id": "cache",
+      "type": "database",
+      "name": "Redis Cache",
+      "description": "Caches frequently accessed data",
+      "x": 500,
+      "y": 620,
+      "width": 120,
+      "height": 80,
+      "color": "#dc3545"
+    }
+  ],
+  "relationships": [
+    {
+      "id": "user-to-web",
+      "from": "user",
+      "to": "web-app",
+      "label": "Uses",
+      "type": "uses"
+    },
+    {
+      "id": "user-to-mobile",
+      "from": "user",
+      "to": "mobile-app",
+      "label": "Uses",
+      "type": "uses"
+    },
+    {
+      "id": "web-to-api",
+      "from": "web-app",
+      "to": "api-gateway",
+      "label": "Makes API calls",
+      "type": "uses"
+    },
+    {
+      "id": "mobile-to-api",
+      "from": "mobile-app",
+      "to": "api-gateway",
+      "label": "Makes API calls",
+      "type": "uses"
+    },
+    {
+      "id": "api-to-auth",
+      "from": "api-gateway",
+      "to": "auth-service",
+      "label": "Authenticates requests",
+      "type": "uses"
+    },
+    {
+      "id": "api-to-user",
+      "from": "api-gateway",
+      "to": "user-service",
+      "label": "Routes user requests",
+      "type": "uses"
+    },
+    {
+      "id": "api-to-notification",
+      "from": "api-gateway",
+      "to": "notification-service",
+      "label": "Sends notifications",
+      "type": "uses"
+    },
+    {
+      "id": "user-service-to-db",
+      "from": "user-service",
+      "to": "user-database",
+      "label": "Reads/writes user data",
+      "type": "uses"
+    },
+    {
+      "id": "user-service-to-cache",
+      "from": "user-service",
+      "to": "cache",
+      "label": "Caches data",
+      "type": "uses"
+    },
+    {
+      "id": "auth-to-cache",
+      "from": "auth-service",
+      "to": "cache",
+      "label": "Stores sessions",
+      "type": "uses"
+    }
+  ],
+  "metadata": {
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-01-10T12:00:00Z",
+    "version": "1.1",
+    "isCollaborative": true
+  }
+}

@@ -1,0 +1,157 @@
+{
+  "id": "payment-service-pipeline",
+  "serviceId": "payment-service",
+  "name": "Payment Service CI/CD Pipeline",
+  "description": "Build, test, and deploy pipeline for payment service",
+  "stages": [
+    {
+      "name": "build",
+      "displayName": "Build",
+      "description": "Compile and package the application",
+      "dependsOn": [],
+      "condition": "always",
+      "steps": [
+        {
+          "name": "checkout",
+          "type": "checkout",
+          "displayName": "Checkout Code",
+          "configuration": {
+            "repository": "$(Build.Repository.Uri)",
+            "branch": "$(Build.SourceBranch)"
+          }
+        },
+        {
+          "name": "restore",
+          "type": "dotnet",
+          "displayName": "Restore Dependencies",
+          "configuration": {
+            "command": "restore",
+            "projects": "**/*.csproj"
+          }
+        },
+        {
+          "name": "build",
+          "type": "dotnet",
+          "displayName": "Build Application",
+          "configuration": {
+            "command": "build",
+            "projects": "**/*.csproj",
+            "arguments": "--configuration Release --no-restore"
+          }
+        }
+      ]
+    },
+    {
+      "name": "test",
+      "displayName": "Test",
+      "description": "Run unit and integration tests",
+      "dependsOn": ["build"],
+      "condition": "always",
+      "steps": [
+        {
+          "name": "unit-tests",
+          "type": "dotnet",
+          "displayName": "Run Unit Tests",
+          "configuration": {
+            "command": "test",
+            "projects": "**/*Tests.csproj",
+            "arguments": "--configuration Release --no-build --logger trx --results-directory $(Agent.TempDirectory)"
+          }
+        },
+        {
+          "name": "code-coverage",
+          "type": "dotnet",
+          "displayName": "Generate Code Coverage",
+          "configuration": {
+            "command": "test",
+            "projects": "**/*Tests.csproj",
+            "arguments": "--configuration Release --no-build --collect:\"XPlat Code Coverage\""
+          }
+        }
+      ]
+    },
+    {
+      "name": "package",
+      "displayName": "Package",
+      "description": "Create deployment artifacts",
+      "dependsOn": ["test"],
+      "condition": "succeeded",
+      "steps": [
+        {
+          "name": "publish",
+          "type": "dotnet",
+          "displayName": "Publish Application",
+          "configuration": {
+            "command": "publish",
+            "projects": "**/PaymentService.csproj",
+            "arguments": "--configuration Release --no-build --output $(Build.ArtifactStagingDirectory)"
+          }
+        },
+        {
+          "name": "docker-build",
+          "type": "docker",
+          "displayName": "Build Docker Image",
+          "configuration": {
+            "command": "build",
+            "dockerfile": "Dockerfile",
+            "context": "$(Build.ArtifactStagingDirectory)",
+            "tags": ["payment-service:$(Build.BuildNumber)", "payment-service:latest"]
+          }
+        }
+      ]
+    },
+    {
+      "name": "deploy-dev",
+      "displayName": "Deploy to Development",
+      "description": "Deploy to development environment",
+      "dependsOn": ["package"],
+      "condition": "succeeded",
+      "steps": [
+        {
+          "name": "docker-run",
+          "type": "docker",
+          "displayName": "Deploy to Docker Desktop",
+          "configuration": {
+            "command": "run",
+            "image": "payment-service:latest",
+            "ports": ["8080:80"],
+            "environment": {
+              "ASPNETCORE_ENVIRONMENT": "Development",
+              "ConnectionStrings__DefaultConnection": "$(DevConnectionString)"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "environment": {
+    "variables": {
+      "BuildConfiguration": "Release",
+      "DevConnectionString": "Server=localhost;Database=PaymentServiceDev;Trusted_Connection=true;"
+    },
+    "secrets": [],
+    "dockerConfiguration": {
+      "baseImage": "mcr.microsoft.com/dotnet/aspnet:8.0",
+      "workingDirectory": "/app",
+      "exposedPorts": [80]
+    }
+  },
+  "triggers": [
+    {
+      "type": "push",
+      "branches": ["main", "develop"],
+      "pathFilters": ["src/PaymentService/**"]
+    },
+    {
+      "type": "pullRequest",
+      "targetBranches": ["main"],
+      "pathFilters": ["src/PaymentService/**"]
+    }
+  ],
+  "metadata": {
+    "createdAt": "2025-01-10T10:00:00.000Z",
+    "updatedAt": "2025-01-10T10:00:00.000Z",
+    "version": "1.0",
+    "tags": ["ci-cd", "dotnet", "docker"]
+  }
+}

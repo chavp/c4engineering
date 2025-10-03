@@ -1,0 +1,374 @@
+/* C4 Diagram Editor Styles */
+
+/* Canvas and Container */
+#diagramContainer {
+    background: #f8f9fa;
+    background-image: 
+        linear-gradient(rgba(0,0,0,.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+    overflow: hidden;
+}
+
+.diagram-svg {
+    cursor: grab;
+    background: transparent;
+}
+
+.diagram-svg:active {
+    cursor: grabbing;
+}
+
+/* Component Palette */
+.palette-item {
+    padding: 8px;
+    margin: 4px 0;
+    border: 2px solid transparent;
+    border-radius: 6px;
+    cursor: grab;
+    background: var(--bs-light);
+    color: var(--bs-dark);
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.palette-item:hover {
+    background: var(--bs-primary);
+    color: white;
+    border-color: var(--bs-primary);
+    transform: translateX(4px);
+}
+
+.palette-item:active {
+    cursor: grabbing;
+}
+
+.palette-item i {
+    margin-right: 6px;
+    font-size: 1rem;
+}
+
+/* C4 Element Styles */
+.c4-element {
+    cursor: move;
+    transition: all 0.2s ease;
+}
+
+.c4-element:hover {
+    filter: brightness(1.1);
+}
+
+.c4-element.selected {
+    stroke: #007bff;
+    stroke-width: 3px;
+    stroke-dasharray: 5,5;
+    animation: dash 1s linear infinite;
+}
+
+@keyframes dash {
+    to {
+        stroke-dashoffset: -10;
+    }
+}
+
+.c4-element-rect {
+    rx: 8;
+    ry: 8;
+}
+
+.c4-element-text {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    text-anchor: middle;
+    dominant-baseline: central;
+    fill: white;
+    pointer-events: none;
+}
+
+.c4-element-name {
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.c4-element-type {
+    font-size: 12px;
+    opacity: 0.9;
+}
+
+.c4-element-description {
+    font-size: 11px;
+    opacity: 0.8;
+}
+
+/* C4 Type Colors */
+.c4-person {
+    fill: var(--c4-person);
+}
+
+.c4-system {
+    fill: var(--c4-system);
+}
+
+.c4-external-system {
+    fill: var(--c4-external);
+}
+
+.c4-container {
+    fill: var(--c4-container);
+}
+
+.c4-component {
+    fill: var(--c4-component);
+}
+
+.c4-database {
+    fill: #198754;
+}
+
+.c4-api {
+    fill: #fd7e14;
+}
+
+.c4-web-app {
+    fill: #20c997;
+}
+
+.c4-mobile-app {
+    fill: #6f42c1;
+}
+
+.c4-message-queue {
+    fill: #dc3545;
+}
+
+/* Relationships */
+.c4-relationship {
+    stroke: #495057;
+    stroke-width: 2;
+    fill: none;
+    marker-end: url(#arrowhead);
+}
+
+.c4-relationship:hover {
+    stroke: var(--c4-primary);
+    stroke-width: 3;
+}
+
+.c4-relationship.selected {
+    stroke: #007bff;
+    stroke-width: 3;
+    stroke-dasharray: 5,5;
+    animation: dash 1s linear infinite;
+}
+
+.c4-relationship-label {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 12px;
+    fill: #495057;
+    text-anchor: middle;
+    background: white;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+/* Drag and Drop */
+.drag-over {
+    border: 2px dashed var(--c4-primary);
+    background-color: rgba(0, 123, 255, 0.1);
+}
+
+.dragging {
+    opacity: 0.5;
+    transform: rotate(5deg);
+}
+
+/* Properties Panel */
+#propertiesPanel .form-control:focus {
+    border-color: var(--c4-primary);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* Zoom Controls */
+.zoom-controls {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+}
+
+/* Minimap */
+.minimap {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: 200px;
+    height: 150px;
+    border: 1px solid #dee2e6;
+    background: white;
+    border-radius: 4px;
+    z-index: 1000;
+}
+
+.minimap-viewport {
+    fill: rgba(13, 110, 253, 0.2);
+    stroke: #007bff;
+    stroke-width: 2;
+}
+
+/* Context Menu */
+.context-menu {
+    position: absolute;
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    padding: 4px 0;
+    min-width: 150px;
+    z-index: 1050;
+}
+
+.context-menu-item {
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #212529;
+    transition: background-color 0.1s ease;
+}
+
+.context-menu-item:hover {
+    background-color: #f8f9fa;
+}
+
+.context-menu-item.danger:hover {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.context-menu-divider {
+    height: 1px;
+    background-color: #dee2e6;
+    margin: 4px 0;
+}
+
+/* Connection Points */
+.connection-point {
+    fill: var(--c4-primary);
+    stroke: white;
+    stroke-width: 2;
+    r: 6;
+    cursor: crosshair;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.c4-element:hover .connection-point {
+    opacity: 1;
+}
+
+.connection-point:hover {
+    r: 8;
+    fill: #0056b3;
+}
+
+/* Connection line preview */
+.connection-preview {
+    stroke: var(--c4-primary);
+    stroke-width: 2;
+    stroke-dasharray: 5,5;
+    fill: none;
+    pointer-events: none;
+}
+
+/* Animation for real-time updates */
+.real-time-update {
+    animation: pulse 1s ease-in-out;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Collaboration cursors */
+.collaboration-cursor {
+    position: absolute;
+    pointer-events: none;
+    z-index: 999;
+    transition: all 0.1s ease;
+}
+
+.collaboration-cursor::after {
+    content: attr(data-user);
+    position: absolute;
+    top: 20px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+/* Export styles */
+.export-preview {
+    max-width: 100%;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .palette-item {
+        padding: 6px;
+        font-size: 0.8rem;
+    }
+    
+    .c4-element-text {
+        font-size: 12px;
+    }
+    
+    .c4-element-name {
+        font-size: 14px;
+    }
+    
+    .minimap {
+        width: 150px;
+        height: 100px;
+    }
+}
+
+/* Print styles */
+@media print {
+    .card-header,
+    .btn-toolbar,
+    #componentPalette,
+    #propertiesPanel,
+    .zoom-controls,
+    .minimap {
+        display: none !important;
+    }
+    
+    #diagramContainer {
+        background: white !important;
+    }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .c4-element {
+        stroke: black;
+        stroke-width: 2;
+    }
+    
+    .c4-relationship {
+        stroke: black;
+        stroke-width: 3;
+    }
+    
+    .palette-item {
+        border: 2px solid black;
+    }
+}
