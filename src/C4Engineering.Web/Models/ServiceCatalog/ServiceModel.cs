@@ -53,7 +53,8 @@ public enum ServiceType
 {
     Service,
     Website,
-    Library
+    Library,
+    Database
 }
 
 public enum ServiceLifecycle

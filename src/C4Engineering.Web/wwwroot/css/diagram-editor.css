@@ -372,3 +372,267 @@
         border: 2px solid black;
     }
 }
+
+/* === RELATIONSHIP MANAGEMENT STYLES === */
+
+/* Connection Mode */
+.connection-mode-active {
+    cursor: crosshair !important;
+}
+
+.connection-source {
+    stroke: #007bff !important;
+    stroke-width: 4 !important;
+    stroke-dasharray: 5,5;
+    animation: dash 1s linear infinite;
+}
+
+/* Relationship List */
+#relationshipList .list-group-item {
+    padding: 0.5rem;
+    border: none;
+    border-bottom: 1px solid #dee2e6;
+}
+
+#relationshipList .list-group-item:hover {
+    background-color: #f8f9fa;
+}
+
+#relationshipList .list-group-item.active {
+    background-color: #e3f2fd;
+    border-color: #2196f3;
+}
+
+.relationship-item {
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.relationship-item:hover {
+    background-color: #f8f9fa;
+}
+
+.relationship-item.selected {
+    background-color: #e3f2fd;
+}
+
+/* Relationship Properties Panel */
+#relationshipProperties {
+    border-top: 1px solid #dee2e6;
+    padding-top: 1rem;
+    margin-top: 1rem;
+}
+
+#relationshipProperties .form-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #495057;
+}
+
+#relationshipProperties .form-control,
+#relationshipProperties .form-select {
+    font-size: 0.875rem;
+}
+
+/* Relationship Modal */
+#relationshipModal .modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+#relationshipModal .form-label {
+    font-weight: 600;
+    color: #495057;
+}
+
+#widthValue {
+    color: #6c757d;
+    font-weight: 500;
+}
+
+/* Connection Mode Modal */
+#connectionModeModal .modal-header {
+    background: linear-gradient(135deg, #17a2b8, #20c997);
+}
+
+#connectionModeModal .alert-info {
+    border-color: #17a2b8;
+    background-color: rgba(23, 162, 184, 0.1);
+}
+
+#connectionModeModal kbd {
+    background-color: #343a40;
+    color: #fff;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+}
+
+/* Enhanced Relationship Rendering */
+.c4-relationship {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.c4-relationship:hover {
+    stroke-width: 3 !important;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+.c4-relationship.selected {
+    stroke: #007bff !important;
+    stroke-width: 3 !important;
+    stroke-dasharray: 8,4;
+    animation: dash 2s linear infinite;
+    filter: drop-shadow(0 2px 8px rgba(0,123,255,0.3));
+}
+
+.c4-relationship-label {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    text-anchor: middle;
+    pointer-events: none;
+    user-select: none;
+}
+
+.c4-relationship-tech {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 10px;
+    font-style: italic;
+    text-anchor: middle;
+    pointer-events: none;
+    user-select: none;
+    opacity: 0.8;
+}
+
+/* Relationship Context Menu */
+#relationshipContextMenu {
+    position: absolute;
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    padding: 0.25rem 0;
+    min-width: 150px;
+    z-index: 1050;
+}
+
+#relationshipContextMenu .dropdown-item {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    color: #212529;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+#relationshipContextMenu .dropdown-item:hover {
+    background-color: #f8f9fa;
+}
+
+#relationshipContextMenu .dropdown-item.text-danger:hover {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* Relationship Manager Buttons */
+#relationshipManager .btn-group-sm .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+}
+
+#connectionModeBtn.active {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+    color: white;
+    box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.25);
+}
+
+/* Advanced Relationship Styling */
+.relationship-solid {
+    stroke-dasharray: none;
+}
+
+.relationship-dashed {
+    stroke-dasharray: 8,4;
+}
+
+.relationship-dotted {
+    stroke-dasharray: 2,2;
+}
+
+/* Relationship Animation */
+@keyframes dash {
+    to {
+        stroke-dashoffset: -24;
+    }
+}
+
+/* Relationship Hover Effects */
+.c4-relationship:hover .c4-relationship-label {
+    font-weight: 700;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.c4-relationship:hover .c4-relationship-tech {
+    opacity: 1;
+}
+
+/* Connection Preview Line */
+.connection-preview-line {
+    stroke: #007bff;
+    stroke-width: 2;
+    stroke-dasharray: 5,5;
+    fill: none;
+    pointer-events: none;
+    animation: dash 1s linear infinite;
+}
+
+/* Relationship Type Indicators */
+.relationship-uses { stroke: #28a745; }
+.relationship-calls { stroke: #007bff; }
+.relationship-sends { stroke: #17a2b8; }
+.relationship-includes { stroke: #6610f2; }
+.relationship-extends { stroke: #e83e8c; }
+.relationship-depends { stroke: #fd7e14; }
+
+/* No Relationships State */
+#noRelationships {
+    font-style: italic;
+    color: #6c757d;
+}
+
+/* Responsive Relationship Management */
+@media (max-width: 768px) {
+    #relationshipManager .btn-group {
+        width: 100%;
+    }
+    
+    #relationshipManager .btn {
+        flex: 1;
+    }
+    
+    .c4-relationship-label {
+        font-size: 10px;
+    }
+    
+    .c4-relationship-tech {
+        font-size: 8px;
+    }
+}
+
+/* Accessibility Enhancements */
+@media (prefers-reduced-motion: reduce) {
+    .c4-relationship,
+    .connection-source,
+    .connection-preview-line {
+        animation: none;
+    }
+    
+    .c4-relationship.selected {
+        animation: none;
+        stroke-dasharray: none;
+        stroke-width: 4 !important;
+    }
+}

@@ -1,0 +1,17 @@
+{
+  "id": "e-commerce-platform-context-1c4d6cf9",
+  "name": "Tes",
+  "type": "context",
+  "system": "e-commerce-platform",
+  "description": null,
+  "elements": [],
+  "relationships": [],
+  "metadata": {
+    "createdAt": "2025-10-04T06:18:31.9244353Z",
+    "updatedAt": "2025-10-04T06:18:31.9244356Z",
+    "createdBy": null,
+    "version": "1.0",
+    "parentDiagram": null,
+    "childDiagrams": []
+  }
+}

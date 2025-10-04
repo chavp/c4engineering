@@ -33,12 +33,14 @@ builder.Services.AddScoped<IServiceRepository, JsonServiceRepository>();
 builder.Services.AddScoped<IDiagramRepository, JsonDiagramRepository>();
 builder.Services.AddScoped<IPipelineRepository, JsonPipelineRepository>();
 builder.Services.AddScoped<IPipelineExecutionRepository, JsonPipelineExecutionRepository>();
+builder.Services.AddScoped<IProjectRepository, JsonProjectRepository>();
 
 // Register services
 builder.Services.AddScoped<IServiceCatalogService, ServiceCatalogService>();
 builder.Services.AddScoped<IDiagramService, DiagramService>();
 builder.Services.AddScoped<IPipelineService, PipelineService>();
 builder.Services.AddScoped<IDockerDeploymentService, DockerDeploymentService>();
+builder.Services.AddScoped<IProjectService, ProjectService>();
 
 var app = builder.Build();
 

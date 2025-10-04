@@ -5,54 +5,298 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - C4Engineering Platform</title>
     <link rel="stylesheet" href="~/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     @await RenderSectionAsync("Styles", required: false)
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">C4Engineering</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+<body class="azure-layout">
+    <!-- Top Header -->
+    <header class="top-header">
+        <div class="header-content">
+            <!-- Logo and Project Selector -->
+            <div class="header-left">
+                <div class="logo-section">
+                    <i class="bi bi-microsoft text-primary me-2"></i>
+                    <span class="brand-name">C4Engineering</span>
+                </div>
+                <div class="project-selector">
+                    <button class="btn btn-sm project-btn" data-bs-toggle="dropdown">
+                        <i class="bi bi-grid-3x3-gap me-1"></i>
+                        Platform Engineering
+                        <i class="bi bi-chevron-down ms-1"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="@Url.Action("Index", "Projects")"><i class="bi bi-box-seam me-2"></i>Platform Engineering</a></li>
+                        <li><a class="dropdown-item" href="@Url.Action("Create", "Projects")"><i class="bi bi-plus me-2"></i>New Project</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Search and User Controls -->
+            <div class="header-right">
+                <div class="search-container">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-transparent border-0">
+                            <i class="bi bi-search text-muted"></i>
+                        </span>
+                        <input type="text" class="form-control border-0 bg-transparent" placeholder="Search services, pipelines..." />
+                    </div>
+                </div>
+                
+                <div class="header-actions">
+                    <button class="btn btn-sm header-action-btn" title="Notifications">
+                        <i class="bi bi-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <button class="btn btn-sm header-action-btn" title="Help">
+                        <i class="bi bi-question-circle"></i>
+                    </button>
+                    <div class="user-profile dropdown">
+                        <button class="btn btn-sm user-btn" data-bs-toggle="dropdown">
+                            <div class="user-avatar">
+                                <i class="bi bi-person-circle"></i>
+                            </div>
+                            <span class="user-name">Platform Admin</span>
+                            <i class="bi bi-chevron-down ms-1"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>Profile</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-box-arrow-right me-2"></i>Sign out</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <div class="nav-section">
+                    <div class="nav-section-title">Overview</div>
+                    <ul class="nav-list">
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a>
+                            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Index" && ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")" 
+                               asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-speedometer2"></i>
+                                <span>Dashboard</span>
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Services">Service Catalog</a>
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Projects" ? "active" : "")" 
+                               asp-controller="Projects" asp-action="Index">
+                                <i class="bi bi-folder"></i>
+                                <span>Projects</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Services</div>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "ServiceCatalog" ? "active" : "")" 
+                               asp-controller="ServiceCatalog" asp-action="Index">
+                                <i class="bi bi-collection"></i>
+                                <span>Service Catalog</span>
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Architecture">Architecture</a>
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Architecture" ? "active" : "")" 
+                               asp-controller="Architecture" asp-action="Index">
+                                <i class="bi bi-diagram-3"></i>
+                                <span>Architecture</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Delivery</div>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Pipeline" ? "active" : "")" 
+                               asp-controller="Pipeline" asp-action="Index">
+                                <i class="bi bi-arrow-repeat"></i>
+                                <span>Pipelines</span>
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Pipelines">Pipelines</a>
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Deployment" ? "active" : "")" 
+                               asp-controller="Deployment" asp-action="Index">
+                                <i class="bi bi-cloud-upload"></i>
+                                <span>Deployments</span>
+                            </a>
                         </li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Settings</div>
+                    <ul class="nav-list">
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Deployments">Deployments</a>
+                            <a class="nav-link" href="/api-docs" target="_blank">
+                                <i class="bi bi-code-slash"></i>
+                                <span>API Docs</span>
+                            </a>
                         </li>
                     </ul>
                 </div>
             </div>
+            
+            <!-- Sidebar Toggle -->
+            <div class="sidebar-toggle">
+                <button class="btn btn-sm toggle-btn" id="sidebarToggle">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+            </div>
         </nav>
-    </header>
-    <div class="container-fluid">
-        <main role="main" class="pb-3">
-            @RenderBody()
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Breadcrumb -->
+            <div class="breadcrumb-container">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="@Url.Action("Index", "Home")">
+                                <i class="bi bi-house-door"></i>
+                                Platform Engineering
+                            </a>
+                        </li>
+                        @if (ViewData["Breadcrumb"] != null)
+                        {
+                            @Html.Raw(ViewData["Breadcrumb"])
+                        }
+                        else
+                        {
+                            <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                        }
+                    </ol>
+                </nav>
+            </div>
+
+            <!-- Page Content -->
+            <div class="page-content">
+                @RenderBody()
+            </div>
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - C4Engineering Platform - <a asp-area="" asp-controller="Home" asp-action="Index">Platform Engineering MVP</a>
+    <!-- Command Palette (Hidden by default) -->
+    <div class="command-palette" id="commandPalette" style="display: none;">
+        <div class="command-palette-content">
+            <div class="command-search">
+                <input type="text" class="form-control" placeholder="Type a command or search..." id="commandInput" />
+            </div>
+            <div class="command-results" id="commandResults">
+                <div class="command-category">
+                    <div class="command-category-title">Quick Actions</div>
+                    <div class="command-item" data-action="new-service">
+                        <i class="bi bi-plus-circle"></i>
+                        <span>New Service</span>
+                        <kbd>Ctrl+N</kbd>
+                    </div>
+                    <div class="command-item" data-action="search-services">
+                        <i class="bi bi-search"></i>
+                        <span>Search Services</span>
+                        <kbd>Ctrl+K</kbd>
+                    </div>
+                </div>
+            </div>
         </div>
-    </footer>
+    </div>
 
     <script src="~/js/bootstrap.bundle.min.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script>
+        // Ensure Bootstrap is properly initialized
+        if (typeof bootstrap === 'undefined') {
+            console.error('Bootstrap JavaScript not loaded properly');
+        }
+        
+        // Global error handler for JavaScript errors
+        window.addEventListener('error', function(e) {
+            console.error('JavaScript error:', e.error);
+        });
+        
+        // Global handler for unhandled promise rejections
+        window.addEventListener('unhandledrejection', function(e) {
+            console.error('Unhandled promise rejection:', e.reason);
+        });
+
+        // Azure DevOps-like layout functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sidebar toggle
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.querySelector('.main-content');
+            
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('collapsed');
+                    mainContent.classList.toggle('sidebar-collapsed');
+                    
+                    const icon = sidebarToggle.querySelector('i');
+                    if (sidebar.classList.contains('collapsed')) {
+                        icon.className = 'bi bi-chevron-right';
+                    } else {
+                        icon.className = 'bi bi-chevron-left';
+                    }
+                });
+            }
+
+            // Command Palette (Ctrl+Shift+P)
+            const commandPalette = document.getElementById('commandPalette');
+            const commandInput = document.getElementById('commandInput');
+            
+            document.addEventListener('keydown', function(e) {
+                // Ctrl+Shift+P to open command palette
+                if (e.ctrlKey && e.shiftKey && e.key === 'P') {
+                    e.preventDefault();
+                    commandPalette.style.display = 'flex';
+                    commandInput.focus();
+                }
+                
+                // Escape to close command palette
+                if (e.key === 'Escape' && commandPalette.style.display === 'flex') {
+                    commandPalette.style.display = 'none';
+                }
+            });
+            
+            // Close command palette when clicking outside
+            if (commandPalette) {
+                commandPalette.addEventListener('click', function(e) {
+                    if (e.target === commandPalette) {
+                        commandPalette.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Handle command palette actions
+            document.querySelectorAll('.command-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const action = this.dataset.action;
+                    commandPalette.style.display = 'none';
+                    
+                    switch(action) {
+                        case 'new-service':
+                            // Navigate to new service or open modal
+                            window.location.href = '/ServiceCatalog';
+                            break;
+                        case 'search-services':
+                            // Focus search or navigate to services
+                            window.location.href = '/ServiceCatalog';
+                            break;
+                    }
+                });
+            });
+        });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

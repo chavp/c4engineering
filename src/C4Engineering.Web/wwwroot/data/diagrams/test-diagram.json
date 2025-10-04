@@ -1,7 +1,7 @@
 {
   "id": "test-diagram",
   "name": "Test System Context",
-  "type": 0,
+  "type": "context",
   "system": "test-system",
   "description": "A test diagram for contract testing",
   "elements": [],

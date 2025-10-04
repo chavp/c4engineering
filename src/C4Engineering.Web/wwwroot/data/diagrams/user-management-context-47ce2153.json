@@ -1,0 +1,17 @@
+{
+  "id": "user-management-context-47ce2153",
+  "name": "Test",
+  "type": "context",
+  "system": "user-management",
+  "description": null,
+  "elements": [],
+  "relationships": [],
+  "metadata": {
+    "createdAt": "2025-10-04T05:29:23.9955455Z",
+    "updatedAt": "2025-10-04T05:29:23.9955461Z",
+    "createdBy": null,
+    "version": "1.0",
+    "parentDiagram": null,
+    "childDiagrams": []
+  }
+}

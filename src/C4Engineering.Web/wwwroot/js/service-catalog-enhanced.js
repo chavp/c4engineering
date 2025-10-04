@@ -85,7 +85,10 @@ class EnhancedServiceCatalogManager {
         try {
             showLoading();
             const services = await this.apiClient.get('/api/services');
-            this.services = services || [];
+            this.services = Array.isArray(services) ? services : [];
+            
+            console.log(`Loaded ${this.services.length} services`);
+            
             this.applyFilters();
             
             // Update graph if it's initialized
@@ -94,7 +97,7 @@ class EnhancedServiceCatalogManager {
             }
         } catch (error) {
             console.error('Failed to load services:', error);
-            showErrorToast('Failed to load services');
+            showErrorToast('Failed to load services: ' + (error.message || 'Unknown error'));
             this.services = [];
             this.renderServices();
         } finally {
@@ -123,14 +126,24 @@ class EnhancedServiceCatalogManager {
     }
 
     initializeGraph() {
-        if (!this.dependencyGraph) {
-            this.dependencyGraph = new ServiceDependencyGraph('dependencyGraph', {
-                width: 800,
-                height: 600,
-                nodeRadius: 35,
-                linkDistance: 120,
-                chargeStrength: -400
-            });
+        try {
+            if (!this.dependencyGraph && typeof ServiceDependencyGraph !== 'undefined') {
+                this.dependencyGraph = new ServiceDependencyGraph('dependencyGraph', {
+                    width: 800,
+                    height: 600,
+                    nodeRadius: 35,
+                    linkDistance: 120,
+                    chargeStrength: -400
+                });
+            }
+        } catch (error) {
+            console.error('Failed to initialize graph:', error);
+            // Disable graph view if initialization fails
+            const graphViewRadio = document.getElementById('graphView');
+            if (graphViewRadio) {
+                graphViewRadio.disabled = true;
+                graphViewRadio.parentElement.title = 'Graph view unavailable';
+            }
         }
     }
 
@@ -150,9 +163,13 @@ class EnhancedServiceCatalogManager {
 
     async refreshGraph() {
         if (this.dependencyGraph) {
-            // Reinitialize the graph with current data
-            await this.dependencyGraph.init();
-            this.applyGraphFilters();
+            try {
+                // Reinitialize the graph with current data
+                await this.dependencyGraph.init();
+                this.applyGraphFilters();
+            } catch (error) {
+                console.error('Failed to refresh graph:', error);
+            }
         }
     }
 
@@ -224,11 +241,15 @@ class EnhancedServiceCatalogManager {
     }
 
     applyGraphFilters() {
-        if (this.dependencyGraph) {
-            const filterFn = (node) => {
-                return this.filteredServices.some(service => service.id === node.id);
-            };
-            this.dependencyGraph.filterNodes(filterFn);
+        if (this.dependencyGraph && typeof this.dependencyGraph.filterNodes === 'function') {
+            try {
+                const filterFn = (node) => {
+                    return this.filteredServices.some(service => service.id === node.id);
+                };
+                this.dependencyGraph.filterNodes(filterFn);
+            } catch (error) {
+                console.error('Failed to apply graph filters:', error);
+            }
         }
     }
 
@@ -388,16 +409,39 @@ class EnhancedServiceCatalogManager {
     }
 
     viewServiceInGraph(serviceId) {
-        // Switch to graph view and focus on the service
-        document.getElementById('graphView').checked = true;
-        this.switchView('graph');
-        
-        // Focus on the specific service node
-        setTimeout(() => {
-            if (this.dependencyGraph) {
-                this.dependencyGraph.focusOnNode(serviceId);
+        try {
+            // Switch to graph view and focus on the service
+            const graphViewRadio = document.getElementById('graphView');
+            if (graphViewRadio && !graphViewRadio.disabled) {
+                graphViewRadio.checked = true;
+                this.switchView('graph');
+                
+                // Focus on the specific service node
+                setTimeout(() => {
+                    if (this.dependencyGraph && typeof this.dependencyGraph.focusOnNode === 'function') {
+                        this.dependencyGraph.focusOnNode(serviceId);
+                    }
+                }, 500);
+            } else {
+                console.warn('Graph view is not available');
+                if (typeof showErrorToast === 'function') {
+                    showErrorToast('Graph view is not available');
+                } else if (typeof window.showToast === 'function') {
+                    window.showToast('Graph view is not available', 'error');
+                } else {
+                    alert('Graph view is not available');
+                }
             }
-        }, 500);
+        } catch (error) {
+            console.error('Failed to view service in graph:', error);
+            if (typeof showErrorToast === 'function') {
+                showErrorToast('Failed to view service in graph');
+            } else if (typeof window.showToast === 'function') {
+                window.showToast('Failed to view service in graph', 'error');
+            } else {
+                alert('Failed to view service in graph');
+            }
+        }
     }
 
     viewServiceArchitecture(serviceId) {

@@ -1,0 +1,214 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\github\\c4engineering\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{D2395486-316E-4513-948C-1077BA7D8261}|src\\C4Engineering.Web\\C4Engineering.Web.csproj|d:\\github\\c4engineering\\src\\c4engineering.web\\models\\project\\projectmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D2395486-316E-4513-948C-1077BA7D8261}|src\\C4Engineering.Web\\C4Engineering.Web.csproj|solutionrelative:src\\c4engineering.web\\models\\project\\projectmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D2395486-316E-4513-948C-1077BA7D8261}|src\\C4Engineering.Web\\C4Engineering.Web.csproj|d:\\github\\c4engineering\\src\\c4engineering.web\\models\\servicecatalog\\servicemodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D2395486-316E-4513-948C-1077BA7D8261}|src\\C4Engineering.Web\\C4Engineering.Web.csproj|solutionrelative:src\\c4engineering.web\\models\\servicecatalog\\servicemodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D2395486-316E-4513-948C-1077BA7D8261}|src\\C4Engineering.Web\\C4Engineering.Web.csproj|d:\\github\\c4engineering\\src\\c4engineering.web\\models\\architecture\\diagrammodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D2395486-316E-4513-948C-1077BA7D8261}|src\\C4Engineering.Web\\C4Engineering.Web.csproj|solutionrelative:src\\c4engineering.web\\models\\architecture\\diagrammodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D2395486-316E-4513-948C-1077BA7D8261}|src\\C4Engineering.Web\\C4Engineering.Web.csproj|d:\\github\\c4engineering\\src\\c4engineering.web\\controllers\\diagramscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D2395486-316E-4513-948C-1077BA7D8261}|src\\C4Engineering.Web\\C4Engineering.Web.csproj|solutionrelative:src\\c4engineering.web\\controllers\\diagramscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D2395486-316E-4513-948C-1077BA7D8261}|src\\C4Engineering.Web\\C4Engineering.Web.csproj|d:\\github\\c4engineering\\src\\c4engineering.web\\controllers\\deploymentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D2395486-316E-4513-948C-1077BA7D8261}|src\\C4Engineering.Web\\C4Engineering.Web.csproj|solutionrelative:src\\c4engineering.web\\controllers\\deploymentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D2395486-316E-4513-948C-1077BA7D8261}|src\\C4Engineering.Web\\C4Engineering.Web.csproj|d:\\github\\c4engineering\\src\\c4engineering.web\\controllers\\architecturecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D2395486-316E-4513-948C-1077BA7D8261}|src\\C4Engineering.Web\\C4Engineering.Web.csproj|solutionrelative:src\\c4engineering.web\\controllers\\architecturecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D2395486-316E-4513-948C-1077BA7D8261}|src\\C4Engineering.Web\\C4Engineering.Web.csproj|d:\\github\\c4engineering\\src\\c4engineering.web\\wwwroot\\data\\diagrams\\context-sample.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{D2395486-316E-4513-948C-1077BA7D8261}|src\\C4Engineering.Web\\C4Engineering.Web.csproj|solutionrelative:src\\c4engineering.web\\wwwroot\\data\\diagrams\\context-sample.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D2395486-316E-4513-948C-1077BA7D8261}|src\\C4Engineering.Web\\C4Engineering.Web.csproj|d:\\github\\c4engineering\\src\\c4engineering.web\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{D2395486-316E-4513-948C-1077BA7D8261}|src\\C4Engineering.Web\\C4Engineering.Web.csproj|solutionrelative:src\\c4engineering.web\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D2395486-316E-4513-948C-1077BA7D8261}|src\\C4Engineering.Web\\C4Engineering.Web.csproj|d:\\github\\c4engineering\\src\\c4engineering.web\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{D2395486-316E-4513-948C-1077BA7D8261}|src\\C4Engineering.Web\\C4Engineering.Web.csproj|solutionrelative:src\\c4engineering.web\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D2395486-316E-4513-948C-1077BA7D8261}|src\\C4Engineering.Web\\C4Engineering.Web.csproj|d:\\github\\c4engineering\\src\\c4engineering.web\\wwwroot\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{D2395486-316E-4513-948C-1077BA7D8261}|src\\C4Engineering.Web\\C4Engineering.Web.csproj|solutionrelative:src\\c4engineering.web\\wwwroot\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D2395486-316E-4513-948C-1077BA7D8261}|src\\C4Engineering.Web\\C4Engineering.Web.csproj|d:\\github\\c4engineering\\src\\c4engineering.web\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{D2395486-316E-4513-948C-1077BA7D8261}|src\\C4Engineering.Web\\C4Engineering.Web.csproj|solutionrelative:src\\c4engineering.web\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D2395486-316E-4513-948C-1077BA7D8261}|src\\C4Engineering.Web\\C4Engineering.Web.csproj|d:\\github\\c4engineering\\src\\c4engineering.web\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D2395486-316E-4513-948C-1077BA7D8261}|src\\C4Engineering.Web\\C4Engineering.Web.csproj|solutionrelative:src\\c4engineering.web\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ProjectModel.cs",
+              "DocumentMoniker": "D:\\github\\c4engineering\\src\\C4Engineering.Web\\Models\\Project\\ProjectModel.cs",
+              "RelativeDocumentMoniker": "src\\C4Engineering.Web\\Models\\Project\\ProjectModel.cs",
+              "ToolTip": "D:\\github\\c4engineering\\src\\C4Engineering.Web\\Models\\Project\\ProjectModel.cs",
+              "RelativeToolTip": "src\\C4Engineering.Web\\Models\\Project\\ProjectModel.cs",
+              "ViewState": "AgIAABQAAAAAAAAAAAAmwBQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-04T06:04:54.427Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "DiagramModel.cs",
+              "DocumentMoniker": "D:\\github\\c4engineering\\src\\C4Engineering.Web\\Models\\Architecture\\DiagramModel.cs",
+              "RelativeDocumentMoniker": "src\\C4Engineering.Web\\Models\\Architecture\\DiagramModel.cs",
+              "ToolTip": "D:\\github\\c4engineering\\src\\C4Engineering.Web\\Models\\Architecture\\DiagramModel.cs",
+              "RelativeToolTip": "src\\C4Engineering.Web\\Models\\Architecture\\DiagramModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-04T05:22:42.518Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ServiceModel.cs",
+              "DocumentMoniker": "D:\\github\\c4engineering\\src\\C4Engineering.Web\\Models\\ServiceCatalog\\ServiceModel.cs",
+              "RelativeDocumentMoniker": "src\\C4Engineering.Web\\Models\\ServiceCatalog\\ServiceModel.cs",
+              "ToolTip": "D:\\github\\c4engineering\\src\\C4Engineering.Web\\Models\\ServiceCatalog\\ServiceModel.cs",
+              "RelativeToolTip": "src\\C4Engineering.Web\\Models\\ServiceCatalog\\ServiceModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-04T05:22:38.275Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "DiagramsController.cs",
+              "DocumentMoniker": "D:\\github\\c4engineering\\src\\C4Engineering.Web\\Controllers\\DiagramsController.cs",
+              "RelativeDocumentMoniker": "src\\C4Engineering.Web\\Controllers\\DiagramsController.cs",
+              "ToolTip": "D:\\github\\c4engineering\\src\\C4Engineering.Web\\Controllers\\DiagramsController.cs",
+              "RelativeToolTip": "src\\C4Engineering.Web\\Controllers\\DiagramsController.cs",
+              "ViewState": "AgIAAFkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-04T05:21:45.277Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "DeploymentController.cs",
+              "DocumentMoniker": "D:\\github\\c4engineering\\src\\C4Engineering.Web\\Controllers\\DeploymentController.cs",
+              "RelativeDocumentMoniker": "src\\C4Engineering.Web\\Controllers\\DeploymentController.cs",
+              "ToolTip": "D:\\github\\c4engineering\\src\\C4Engineering.Web\\Controllers\\DeploymentController.cs",
+              "RelativeToolTip": "src\\C4Engineering.Web\\Controllers\\DeploymentController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-04T05:21:40.522Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ArchitectureController.cs",
+              "DocumentMoniker": "D:\\github\\c4engineering\\src\\C4Engineering.Web\\Controllers\\ArchitectureController.cs",
+              "RelativeDocumentMoniker": "src\\C4Engineering.Web\\Controllers\\ArchitectureController.cs",
+              "ToolTip": "D:\\github\\c4engineering\\src\\C4Engineering.Web\\Controllers\\ArchitectureController.cs",
+              "RelativeToolTip": "src\\C4Engineering.Web\\Controllers\\ArchitectureController.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAQwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-04T05:21:36.579Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "context-sample.json",
+              "DocumentMoniker": "D:\\github\\c4engineering\\src\\C4Engineering.Web\\wwwroot\\data\\diagrams\\context-sample.json",
+              "RelativeDocumentMoniker": "src\\C4Engineering.Web\\wwwroot\\data\\diagrams\\context-sample.json",
+              "ToolTip": "D:\\github\\c4engineering\\src\\C4Engineering.Web\\wwwroot\\data\\diagrams\\context-sample.json",
+              "RelativeToolTip": "src\\C4Engineering.Web\\wwwroot\\data\\diagrams\\context-sample.json",
+              "ViewState": "AgIAAEgAAAAAAAAAAAAAAA4AAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-10-04T05:18:13.309Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "site.css",
+              "DocumentMoniker": "D:\\github\\c4engineering\\src\\C4Engineering.Web\\wwwroot\\css\\site.css",
+              "RelativeDocumentMoniker": "src\\C4Engineering.Web\\wwwroot\\css\\site.css",
+              "ToolTip": "D:\\github\\c4engineering\\src\\C4Engineering.Web\\wwwroot\\css\\site.css",
+              "RelativeToolTip": "src\\C4Engineering.Web\\wwwroot\\css\\site.css",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2025-10-04T05:07:19.384Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "index.html",
+              "DocumentMoniker": "D:\\github\\c4engineering\\src\\C4Engineering.Web\\wwwroot\\index.html",
+              "RelativeDocumentMoniker": "src\\C4Engineering.Web\\wwwroot\\index.html",
+              "ToolTip": "D:\\github\\c4engineering\\src\\C4Engineering.Web\\wwwroot\\index.html",
+              "RelativeToolTip": "src\\C4Engineering.Web\\wwwroot\\index.html",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2025-10-04T05:07:15.381Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\github\\c4engineering\\src\\C4Engineering.Web\\Views\\Home\\Index.cshtml",
+              "RelativeDocumentMoniker": "src\\C4Engineering.Web\\Views\\Home\\Index.cshtml",
+              "ToolTip": "D:\\github\\c4engineering\\src\\C4Engineering.Web\\Views\\Home\\Index.cshtml",
+              "RelativeToolTip": "src\\C4Engineering.Web\\Views\\Home\\Index.cshtml",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-04T05:07:04.001Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\github\\c4engineering\\src\\C4Engineering.Web\\Program.cs",
+              "RelativeDocumentMoniker": "src\\C4Engineering.Web\\Program.cs",
+              "ToolTip": "D:\\github\\c4engineering\\src\\C4Engineering.Web\\Program.cs",
+              "RelativeToolTip": "src\\C4Engineering.Web\\Program.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-04T05:04:12.928Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "D:\\github\\c4engineering\\src\\C4Engineering.Web\\Views\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "src\\C4Engineering.Web\\Views\\Shared\\_Layout.cshtml",
+              "ToolTip": "D:\\github\\c4engineering\\src\\C4Engineering.Web\\Views\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "src\\C4Engineering.Web\\Views\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAAE4AAAAAAAAAAAAAAFUAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-04T05:03:35.55Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -27,6 +27,12 @@ class ServiceDependencyGraph {
     }
 
     async init() {
+        // Check if D3.js is loaded
+        if (typeof d3 === 'undefined') {
+            console.error('D3.js is not loaded');
+            return;
+        }
+        
         this.setupSVG();
         await this.loadServiceData();
         this.setupSimulation();
@@ -36,6 +42,11 @@ class ServiceDependencyGraph {
 
     setupSVG() {
         const container = d3.select(`#${this.containerId}`);
+        
+        if (container.empty()) {
+            console.error(`Container with id '${this.containerId}' not found`);
+            return;
+        }
         
         // Clear existing content
         container.selectAll('*').remove();

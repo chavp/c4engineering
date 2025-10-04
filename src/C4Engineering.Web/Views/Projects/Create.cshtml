@@ -1,0 +1,254 @@
+@model C4Engineering.Web.Models.Project.CreateProjectRequest
+@{
+    ViewData["Title"] = "Create New Project";
+    var templates = ViewBag.Templates as IEnumerable<C4Engineering.Web.Models.Project.ProjectTemplate> ?? Enumerable.Empty<C4Engineering.Web.Models.Project.ProjectTemplate>();
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h2">Create New Project</h1>
+    <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Back to Projects
+    </a>
+</div>
+
+<!-- Project Templates -->
+@if (templates.Any())
+{
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="card-title mb-0">
+                <i class="bi bi-lightning-charge"></i> Quick Start with Templates
+            </h5>
+        </div>
+        <div class="card-body">
+            <p class="text-muted mb-3">Get started quickly with pre-configured project templates</p>
+            <div class="row">
+                @foreach (var template in templates)
+                {
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100 template-card">
+                            <div class="card-body">
+                                <h6 class="card-title">@template.Name</h6>
+                                <p class="card-text small">@template.Description</p>
+                                <div class="mb-2">
+                                    <span class="badge bg-light text-dark">@template.Category</span>
+                                </div>
+                                @if (template.DefaultTags.Any())
+                                {
+                                    <div class="mb-3">
+                                        @foreach (var tag in template.DefaultTags.Take(3))
+                                        {
+                                            <span class="badge bg-secondary me-1 small">@tag</span>
+                                        }
+                                    </div>
+                                }
+                                <a href="@Url.Action("CreateFromTemplate", new { templateId = template.Id })" 
+                                   class="btn btn-primary btn-sm">
+                                    Use Template
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Custom Project Form -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">
+            <i class="bi bi-gear"></i> Create Custom Project
+        </h5>
+    </div>
+    <div class="card-body">
+        <form asp-action="Create" method="post">
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger">
+                    <h6>Please correct the following errors:</h6>
+                    <ul class="mb-0">
+                        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                        {
+                            <li>@error.ErrorMessage</li>
+                        }
+                    </ul>
+                </div>
+            }
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label asp-for="Id" class="form-label">Project ID *</label>
+                        <input asp-for="Id" class="form-control" placeholder="my-awesome-project" required>
+                        <div class="form-text">Unique identifier for your project (lowercase, hyphens allowed)</div>
+                        <span asp-validation-for="Id" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label">Project Name *</label>
+                        <input asp-for="Name" class="form-control" placeholder="My Awesome Project" required>
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label">Description</label>
+                <textarea asp-for="Description" class="form-control" rows="3" 
+                          placeholder="Describe what this project is about..."></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label asp-for="Owner" class="form-label">Owner *</label>
+                        <input asp-for="Owner" class="form-control" placeholder="Team or person responsible" required>
+                        <span asp-validation-for="Owner" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label asp-for="Type" class="form-label">Project Type *</label>
+                        <select asp-for="Type" class="form-select" required>
+                            <option value="">Select project type...</option>
+                            <option value="WebApplication">Web Application</option>
+                            <option value="MobileApplication">Mobile Application</option>
+                            <option value="Microservices">Microservices</option>
+                            <option value="DataPlatform">Data Platform</option>
+                            <option value="MLPlatform">ML Platform</option>
+                            <option value="Infrastructure">Infrastructure</option>
+                            <option value="Library">Library</option>
+                            <option value="Documentation">Documentation</option>
+                        </select>
+                        <span asp-validation-for="Type" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="Tags" class="form-label">Tags</label>
+                <input type="text" id="Tags" name="Tags" class="form-control" 
+                       placeholder="Comma-separated tags (e.g., web, api, microservice)">
+                <div class="form-text">Enter tags separated by commas</div>
+            </div>
+
+            <!-- Project Settings -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h6 class="mb-0">Project Settings</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="Repository" class="form-label">Repository URL</label>
+                                <input type="url" id="Repository" name="Settings.Repository" class="form-control" 
+                                       placeholder="https://github.com/company/project">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="Documentation" class="form-label">Documentation URL</label>
+                                <input type="url" id="Documentation" name="Settings.Documentation" class="form-control" 
+                                       placeholder="https://docs.company.com/project">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="SlackChannel" class="form-label">Slack Channel</label>
+                                <input type="text" id="SlackChannel" name="Settings.SlackChannel" class="form-control" 
+                                       placeholder="#project-team">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="JiraProject" class="form-label">Jira Project</label>
+                                <input type="text" id="JiraProject" name="Settings.JiraProject" class="form-control" 
+                                       placeholder="PROJ">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="IsPublic" name="Settings.IsPublic" checked>
+                                <label class="form-check-label" for="IsPublic">
+                                    Public Project
+                                </label>
+                                <div class="form-text">Allow other teams to view this project</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="EnableNotifications" name="Settings.EnableNotifications" checked>
+                                <label class="form-check-label" for="EnableNotifications">
+                                    Enable Notifications
+                                </label>
+                                <div class="form-text">Receive updates about project activities</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <a href="@Url.Action("Index")" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-plus-circle"></i> Create Project
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Auto-generate project ID from name
+        document.getElementById('Name').addEventListener('input', function() {
+            const name = this.value;
+            const id = name.toLowerCase()
+                .replace(/[^a-z0-9\s-]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-')
+                .replace(/^-|-$/g, '');
+            
+            const idField = document.getElementById('Id');
+            if (!idField.dataset.userModified) {
+                idField.value = id;
+            }
+        });
+        
+        // Mark ID field as user-modified when changed directly
+        document.getElementById('Id').addEventListener('input', function() {
+            this.dataset.userModified = 'true';
+        });
+    </script>
+}
+
+@section Styles {
+    <style>
+        .template-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .template-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .form-text {
+            font-size: 0.875em;
+        }
+        
+        .card-header h6 {
+            color: var(--bs-primary);
+        }
+    </style>
+}

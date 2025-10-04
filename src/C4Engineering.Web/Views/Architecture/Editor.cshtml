@@ -198,6 +198,74 @@
                         </button>
                     </form>
                 </div>
+
+                <div id="relationshipProperties" style="display: none;">
+                    <form id="relationshipForm">
+                        <div class="mb-3">
+                            <label for="relationshipDescription" class="form-label">Description</label>
+                            <input type="text" class="form-control form-control-sm" id="relationshipDescription" placeholder="Uses, Calls, Sends data to">
+                        </div>
+                        <div class="mb-3">
+                            <label for="relationshipTechnology" class="form-label">Technology</label>
+                            <input type="text" class="form-control form-control-sm" id="relationshipTechnology" placeholder="HTTPS, gRPC, Message Queue">
+                        </div>
+                        <div class="mb-3">
+                            <label for="relationshipType" class="form-label">Type</label>
+                            <select class="form-select form-select-sm" id="relationshipType">
+                                <option value="uses">Uses</option>
+                                <option value="calls">Calls</option>
+                                <option value="sends">Sends to</option>
+                                <option value="includes">Includes</option>
+                                <option value="extends">Extends</option>
+                                <option value="depends">Depends on</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Style</label>
+                            <div class="row">
+                                <div class="col-6">
+                                    <label for="relationshipColor" class="form-label small">Color</label>
+                                    <input type="color" class="form-control form-control-color form-control-sm" id="relationshipColor" value="#6c757d">
+                                </div>
+                                <div class="col-6">
+                                    <label for="relationshipWidth" class="form-label small">Width</label>
+                                    <input type="range" class="form-range" id="relationshipWidth" min="1" max="5" value="2">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="relationshipLineStyle" class="form-label">Line Style</label>
+                            <select class="form-select form-select-sm" id="relationshipLineStyle">
+                                <option value="solid">Solid</option>
+                                <option value="dashed">Dashed</option>
+                                <option value="dotted">Dotted</option>
+                            </select>
+                        </div>
+                        <button type="button" class="btn btn-danger btn-sm w-100" id="deleteRelationship">
+                            <i class="bi bi-trash"></i> Delete Relationship
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Relationship Management -->
+                <div id="relationshipManager" class="mt-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="mb-0">Relationships</h6>
+                        <div class="btn-group btn-group-sm" role="group">
+                            <button type="button" class="btn btn-outline-primary" id="addRelationshipBtn" title="Add Relationship">
+                                <i class="bi bi-plus"></i>
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" id="connectionModeBtn" title="Connection Mode">
+                                <i class="bi bi-bezier"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="relationshipList" class="list-group list-group-flush">
+                        <div class="text-muted small text-center py-2" id="noRelationships">
+                            No relationships defined
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -278,6 +346,137 @@
             </div>
         </div>
     </div>
+</div>
+
+<!-- Add/Edit Relationship Modal -->
+<div class="modal fade" id="relationshipModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="relationshipModalTitle">Add Relationship</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="relationshipModalForm">
+                    <div class="mb-3">
+                        <label for="modalSourceElement" class="form-label">From Element</label>
+                        <select class="form-select" id="modalSourceElement" required>
+                            <option value="">Select source element...</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="modalTargetElement" class="form-label">To Element</label>
+                        <select class="form-select" id="modalTargetElement" required>
+                            <option value="">Select target element...</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="modalRelationshipDescription" class="form-label">Description</label>
+                        <input type="text" class="form-control" id="modalRelationshipDescription" placeholder="Uses, Calls, Sends data to" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="modalRelationshipTechnology" class="form-label">Technology</label>
+                        <input type="text" class="form-control" id="modalRelationshipTechnology" placeholder="HTTPS, gRPC, Message Queue">
+                    </div>
+                    
+                    <!-- Advanced Settings -->
+                    <div class="accordion" id="relationshipAdvanced">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#advancedSettings">
+                                    Advanced Settings
+                                </button>
+                            </h2>
+                            <div id="advancedSettings" class="accordion-collapse collapse" data-bs-parent="#relationshipAdvanced">
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="mb-3">
+                                                <label for="modalRelationshipColor" class="form-label">Color</label>
+                                                <input type="color" class="form-control form-control-color" id="modalRelationshipColor" value="#6c757d">
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="mb-3">
+                                                <label for="modalRelationshipWidth" class="form-label">Width</label>
+                                                <input type="range" class="form-range" id="modalRelationshipWidth" min="1" max="5" value="2">
+                                                <div class="text-center"><small id="widthValue">2px</small></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="modalRelationshipLineStyle" class="form-label">Line Style</label>
+                                        <select class="form-select" id="modalRelationshipLineStyle">
+                                            <option value="solid">Solid</option>
+                                            <option value="dashed">Dashed</option>
+                                            <option value="dotted">Dotted</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="modalRelationshipArrowStyle" class="form-label">Arrow Style</label>
+                                        <select class="form-select" id="modalRelationshipArrowStyle">
+                                            <option value="arrow">Arrow</option>
+                                            <option value="diamond">Diamond</option>
+                                            <option value="circle">Circle</option>
+                                            <option value="none">None</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="saveRelationshipBtn">Save Relationship</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Connection Mode Instructions Modal -->
+<div class="modal fade" id="connectionModeModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title">
+                    <i class="bi bi-bezier"></i> Connection Mode Active
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info">
+                    <h6 class="alert-heading">How to create relationships:</h6>
+                    <ol class="mb-0">
+                        <li>Click on the <strong>source element</strong> (where the relationship starts)</li>
+                        <li>Click on the <strong>target element</strong> (where the relationship ends)</li>
+                        <li>A relationship dialog will appear to configure the details</li>
+                        <li>Click "Exit Connection Mode" or press <kbd>Esc</kbd> to exit</li>
+                    </ol>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <button type="button" class="btn btn-outline-secondary" id="exitConnectionMode">
+                        <i class="bi bi-x-circle"></i> Exit Connection Mode
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Relationship List Context Menu -->
+<div class="dropdown-menu" id="relationshipContextMenu" style="display: none;">
+    <a class="dropdown-item" href="#" id="editRelationshipContext">
+        <i class="bi bi-pencil"></i> Edit
+    </a>
+    <a class="dropdown-item" href="#" id="duplicateRelationshipContext">
+        <i class="bi bi-copy"></i> Duplicate
+    </a>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item text-danger" href="#" id="deleteRelationshipContext">
+        <i class="bi bi-trash"></i> Delete
+    </a>
 </div>
 
 @section Scripts {

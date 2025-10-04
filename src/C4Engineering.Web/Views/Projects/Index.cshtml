@@ -1,0 +1,257 @@
+@model IEnumerable<C4Engineering.Web.Models.Project.ProjectSummary>
+@{
+    ViewData["Title"] = "Projects";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h2">Projects</h1>
+    <div>
+        <a href="@Url.Action("Create")" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> New Project
+        </a>
+        <a href="/api/projects" class="btn btn-outline-info" target="_blank">
+            <i class="bi bi-code"></i> API
+        </a>
+    </div>
+</div>
+
+<!-- Filters and Search -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form id="projectFilters" class="row g-3">
+            <div class="col-md-3">
+                <label for="typeFilter" class="form-label">Type</label>
+                <select id="typeFilter" class="form-select">
+                    <option value="">All Types</option>
+                    <option value="WebApplication">Web Application</option>
+                    <option value="MobileApplication">Mobile Application</option>
+                    <option value="Microservices">Microservices</option>
+                    <option value="DataPlatform">Data Platform</option>
+                    <option value="MLPlatform">ML Platform</option>
+                    <option value="Infrastructure">Infrastructure</option>
+                    <option value="Library">Library</option>
+                    <option value="Documentation">Documentation</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="statusFilter" class="form-label">Status</label>
+                <select id="statusFilter" class="form-select">
+                    <option value="">All Statuses</option>
+                    <option value="Planning">Planning</option>
+                    <option value="Active">Active</option>
+                    <option value="Development">Development</option>
+                    <option value="Production">Production</option>
+                    <option value="Maintenance">Maintenance</option>
+                    <option value="Deprecated">Deprecated</option>
+                    <option value="Archived">Archived</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="ownerFilter" class="form-label">Owner</label>
+                <select id="ownerFilter" class="form-select">
+                    <option value="">All Owners</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="searchFilter" class="form-label">Search</label>
+                <input type="text" id="searchFilter" class="form-control" placeholder="Search projects...">
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Projects Grid -->
+<div id="projectsContainer">
+    <div id="projectsGrid" class="row">
+        @if (Model.Any())
+        {
+            @foreach (var project in Model)
+            {
+                <div class="col-lg-4 col-md-6 mb-4 project-card" 
+                     data-type="@project.Type" 
+                     data-status="@project.Status" 
+                     data-owner="@project.Owner">
+                    <div class="card h-100">
+                        <div class="card-header d-flex justify-content-between align-items-start">
+                            <div>
+                                <h5 class="card-title mb-1">
+                                    <a href="@Url.Action("Details", new { id = project.Id })" class="text-decoration-none">
+                                        @project.Name
+                                    </a>
+                                </h5>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="badge bg-primary">@project.Type</span>
+                                    <span class="badge @(project.Status switch {
+                                        "Planning" => "bg-warning",
+                                        "Active" => "bg-success", 
+                                        "Development" => "bg-info",
+                                        "Production" => "bg-success",
+                                        "Maintenance" => "bg-secondary",
+                                        "Deprecated" => "bg-danger",
+                                        "Archived" => "bg-dark",
+                                        _ => "bg-secondary"
+                                    })">@project.Status</span>
+                                </div>
+                            </div>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-three-dots"></i>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="@Url.Action("Details", new { id = project.Id })">
+                                        <i class="bi bi-eye"></i> View Details
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="editProject('@project.Id')">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item text-danger" href="#" onclick="deleteProject('@project.Id')">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            @if (!string.IsNullOrEmpty(project.Description))
+                            {
+                                <p class="card-text">@project.Description</p>
+                            }
+                            else
+                            {
+                                <p class="card-text text-muted">No description available.</p>
+                            }
+                            
+                            <div class="row text-center mt-3">
+                                <div class="col-3">
+                                    <div class="fw-bold text-primary">@project.ServiceCount</div>
+                                    <small class="text-muted">Services</small>
+                                </div>
+                                <div class="col-3">
+                                    <div class="fw-bold text-info">@project.DiagramCount</div>
+                                    <small class="text-muted">Diagrams</small>
+                                </div>
+                                <div class="col-3">
+                                    <div class="fw-bold text-success">@project.PipelineCount</div>
+                                    <small class="text-muted">Pipelines</small>
+                                </div>
+                                <div class="col-3">
+                                    <div class="fw-bold text-warning">@project.TeamMemberCount</div>
+                                    <small class="text-muted">Members</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">
+                                    Owner: @project.Owner
+                                </small>
+                                <small class="text-muted">
+                                    Updated: @project.UpdatedAt.ToString("MMM dd, yyyy")
+                                </small>
+                            </div>
+                            @if (project.Tags.Any())
+                            {
+                                <div class="mt-2">
+                                    @foreach (var tag in project.Tags.Take(3))
+                                    {
+                                        <span class="badge bg-light text-dark me-1">@tag</span>
+                                    }
+                                    @if (project.Tags.Count > 3)
+                                    {
+                                        <span class="badge bg-light text-dark">+@(project.Tags.Count - 3) more</span>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12">
+                <div class="text-center py-5">
+                    <div class="mb-3">
+                        <i class="bi bi-folder-plus display-1 text-muted"></i>
+                    </div>
+                    <h5 class="text-muted">No projects found</h5>
+                    <p class="text-muted">Get started by creating your first project.</p>
+                    <a href="@Url.Action("Create")" class="btn btn-success">
+                        <i class="bi bi-plus-circle"></i> Create Your First Project
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+    
+    <!-- Loading state -->
+    <div id="loadingSpinner" class="text-center py-5" style="display: none;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading projects...</span>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="successToast" class="toast align-items-center text-white bg-success border-0" role="alert">
+        <div class="d-flex">
+            <div class="toast-body">
+                Operation completed successfully!
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    </div>
+    <div id="errorToast" class="toast align-items-center text-white bg-danger border-0" role="alert">
+        <div class="d-flex">
+            <div class="toast-body">
+                <span id="errorMessage">An error occurred.</span>
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="module" src="~/js/projects.js"></script>
+}
+
+@section Styles {
+    <style>
+        .project-card {
+            transition: transform 0.2s ease;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .card-title a:hover {
+            text-decoration: underline !important;
+        }
+        
+        .badge {
+            font-size: 0.75em;
+        }
+        
+        .project-card .card {
+            border-left: 4px solid #0d6efd;
+        }
+        
+        .project-card[data-status="Production"] .card {
+            border-left-color: #198754;
+        }
+        
+        .project-card[data-status="Development"] .card {
+            border-left-color: #0dcaf0;
+        }
+        
+        .project-card[data-status="Planning"] .card {
+            border-left-color: #ffc107;
+        }
+        
+        .project-card[data-status="Deprecated"] .card {
+            border-left-color: #dc3545;
+        }
+    </style>
+}

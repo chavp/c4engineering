@@ -2,7 +2,7 @@
   "id": "payment-service",
   "name": "Updated Payment Service",
   "description": "Updated description for payment service",
-  "type": "service",
+  "type": "Service",
   "owner": "payments-team",
   "repository": "https://github.com/company/payment-service",
   "documentation": "https://docs.company.com/payment-service",
@@ -12,7 +12,7 @@
     "billing",
     "updated"
   ],
-  "lifecycle": "production",
+  "lifecycle": "Production",
   "system": "e-commerce-platform",
   "dependsOn": [
     "user-service",

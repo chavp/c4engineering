@@ -1,1 +1,8 @@
-["context-sample", "container-sample"]
+[
+  "container-sample",
+  "context-sample",
+  "e-commerce-platform-context-1c4d6cf9",
+  "payment-system-context",
+  "test-diagram",
+  "user-management-context-47ce2153"
+]

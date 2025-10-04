@@ -1,0 +1,37 @@
+{
+  "id": "platform-engineering-demo",
+  "name": "Platform Engineering Demo",
+  "description": "Demonstration project showcasing platform engineering capabilities with service catalog, architecture diagrams, and deployment pipelines",
+  "owner": "Platform Team",
+  "type": "infrastructure",
+  "status": "active",
+  "tags": ["platform", "demo", "infrastructure", "devops"],
+  "services": ["user-service", "notification-service"],
+  "diagrams": ["context-sample", "container-sample"],
+  "pipelines": [],
+  "teamMembers": [
+    {
+      "name": "Platform Team",
+      "email": "platform.team@company.com", 
+      "role": "owner",
+      "joinedAt": "2024-01-01T00:00:00Z"
+    }
+  ],
+  "settings": {
+    "repository": "https://github.com/company/platform-engineering-demo",
+    "documentation": "https://docs.company.com/platform",
+    "slackChannel": "#platform-engineering",
+    "jiraProject": "PLATFORM",
+    "isPublic": true,
+    "enableNotifications": true,
+    "allowedDomains": []
+  },
+  "metadata": {
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-01-10T12:00:00Z",
+    "createdBy": "system",
+    "version": "1.0",
+    "template": null,
+    "customFields": {}
+  }
+}

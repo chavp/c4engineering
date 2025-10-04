@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\data\\C4Engineering\\src\\C4Engineering.Web\\C4Engineering.Web.csproj": {}
+    "D:\\github\\c4engineering\\src\\C4Engineering.Web\\C4Engineering.Web.csproj": {}
   },
   "projects": {
-    "C:\\data\\C4Engineering\\src\\C4Engineering.Web\\C4Engineering.Web.csproj": {
+    "D:\\github\\c4engineering\\src\\C4Engineering.Web\\C4Engineering.Web.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\data\\C4Engineering\\src\\C4Engineering.Web\\C4Engineering.Web.csproj",
+        "projectUniqueName": "D:\\github\\c4engineering\\src\\C4Engineering.Web\\C4Engineering.Web.csproj",
         "projectName": "C4Engineering.Web",
-        "projectPath": "C:\\data\\C4Engineering\\src\\C4Engineering.Web\\C4Engineering.Web.csproj",
-        "packagesPath": "C:\\Users\\Parinya.c\\.nuget\\packages\\",
-        "outputPath": "C:\\data\\C4Engineering\\src\\C4Engineering.Web\\obj\\",
+        "projectPath": "D:\\github\\c4engineering\\src\\C4Engineering.Web\\C4Engineering.Web.csproj",
+        "packagesPath": "C:\\Users\\mypar\\.nuget\\packages\\",
+        "outputPath": "D:\\github\\c4engineering\\src\\C4Engineering.Web\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+          "D:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Parinya.c\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\mypar\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],

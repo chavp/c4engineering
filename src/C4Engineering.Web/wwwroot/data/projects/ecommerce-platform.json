@@ -1,0 +1,43 @@
+{
+  "id": "ecommerce-platform",
+  "name": "E-commerce Platform",
+  "description": "Complete e-commerce solution with microservices architecture, supporting online retail operations",
+  "owner": "E-commerce Team",
+  "type": "webApplication",
+  "status": "production",
+  "tags": ["ecommerce", "microservices", "web", "retail"],
+  "services": ["frontend-app", "payment-service"],
+  "diagrams": ["payment-system-context"],
+  "pipelines": [],
+  "teamMembers": [
+    {
+      "name": "E-commerce Team",
+      "email": "ecommerce.team@company.com",
+      "role": "owner", 
+      "joinedAt": "2024-01-01T00:00:00Z"
+    },
+    {
+      "name": "Backend Team",
+      "email": "backend.team@company.com",
+      "role": "maintainer",
+      "joinedAt": "2024-01-05T00:00:00Z"
+    }
+  ],
+  "settings": {
+    "repository": "https://github.com/company/ecommerce-platform",
+    "documentation": "https://docs.company.com/ecommerce",
+    "slackChannel": "#ecommerce-dev",
+    "jiraProject": "ECOM",
+    "isPublic": true,
+    "enableNotifications": true,
+    "allowedDomains": []
+  },
+  "metadata": {
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-01-15T09:30:00Z",
+    "createdBy": "system",
+    "version": "2.0",
+    "template": "web-app-template",
+    "customFields": {}
+  }
+}

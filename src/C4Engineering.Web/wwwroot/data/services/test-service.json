@@ -2,7 +2,7 @@
   "id": "test-service",
   "name": "Test Service",
   "description": "A test service for contract testing",
-  "type": 0,
+  "type": "Service",
   "owner": "test-team",
   "repository": "https://github.com/test/test-service",
   "documentation": null,
@@ -11,7 +11,7 @@
     "test",
     "contract"
   ],
-  "lifecycle": 1,
+  "lifecycle": "Development",
   "system": null,
   "dependsOn": [],
   "providesApis": [],

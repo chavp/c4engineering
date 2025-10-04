@@ -14,12 +14,17 @@ class C4DiagramEditor {
         this.elements = new Map();
         this.relationships = new Map();
         this.selectedElement = null;
+        this.selectedRelationship = null;
         this.connectionMode = false;
         this.connectionStart = null;
         this.diagramId = this.getDiagramIdFromUrl();
         this.currentZoom = 1;
         this.snapToGrid = true;
         this.gridSize = 20;
+        
+        // Relationship management
+        this.isEditingRelationship = false;
+        this.currentRelationshipId = null;
         
         // SignalR connection for real-time collaboration
         this.connection = null;
@@ -48,10 +53,12 @@ class C4DiagramEditor {
             .attr('height', '600px')
             .style('background', 'transparent');
 
-        // Define arrow markers
+        // Define arrow markers for different styles
         const defs = this.svg.append('defs');
+        
+        // Standard arrow
         defs.append('marker')
-            .attr('id', 'arrowhead')
+            .attr('id', 'arrow')
             .attr('viewBox', '0 -5 10 10')
             .attr('refX', 8)
             .attr('refY', 0)
@@ -62,8 +69,40 @@ class C4DiagramEditor {
             .attr('d', 'M0,-5L10,0L0,5')
             .attr('fill', '#495057');
 
+        // Diamond marker
+        defs.append('marker')
+            .attr('id', 'diamond')
+            .attr('viewBox', '0 -5 10 10')
+            .attr('refX', 5)
+            .attr('refY', 0)
+            .attr('markerWidth', 8)
+            .attr('markerHeight', 8)
+            .attr('orient', 'auto')
+            .append('path')
+            .attr('d', 'M0,0L5,-5L10,0L5,5Z')
+            .attr('fill', '#495057');
+
+        // Circle marker
+        defs.append('marker')
+            .attr('id', 'circle')
+            .attr('viewBox', '0 -5 10 10')
+            .attr('refX', 5)
+            .attr('refY', 0)
+            .attr('markerWidth', 8)
+            .attr('markerHeight', 8)
+            .attr('orient', 'auto')
+            .append('circle')
+            .attr('cx', 5)
+            .attr('cy', 0)
+            .attr('r', 3)
+            .attr('fill', '#495057');
+
         // Create main group for zoom/pan
         this.mainGroup = this.svg.append('g').attr('class', 'main-group');
+        
+        // Create separate groups for relationships and elements
+        this.relationshipsGroup = this.mainGroup.append('g').attr('class', 'relationships-group');
+        this.elementsGroup = this.mainGroup.append('g').attr('class', 'elements-group');
         
         // Setup zoom behavior
         this.zoom = d3.zoom()
@@ -149,6 +188,49 @@ class C4DiagramEditor {
             this.deleteSelectedElement();
         });
 
+        // Relationship management event listeners
+        d3.select('#addRelationshipBtn').on('click', () => {
+            this.showRelationshipModal();
+        });
+
+        d3.select('#connectionModeBtn').on('click', () => {
+            this.toggleConnectionMode();
+        });
+
+        d3.select('#saveRelationshipBtn').on('click', () => {
+            this.saveRelationshipFromModal();
+        });
+
+        d3.select('#deleteRelationship').on('click', () => {
+            this.deleteSelectedRelationship();
+        });
+
+        d3.select('#exitConnectionMode').on('click', () => {
+            this.exitConnectionMode();
+        });
+
+        // Relationship form listeners
+        d3.select('#relationshipForm').on('input', () => {
+            this.updateSelectedRelationshipProperties();
+        });
+
+        d3.select('#modalRelationshipWidth').on('input', (event) => {
+            d3.select('#widthValue').text(`${event.target.value}px`);
+        });
+
+        // Context menu for relationships
+        d3.select('#editRelationshipContext').on('click', () => {
+            this.editRelationshipFromContext();
+        });
+
+        d3.select('#duplicateRelationshipContext').on('click', () => {
+            this.duplicateRelationshipFromContext();
+        });
+
+        d3.select('#deleteRelationshipContext').on('click', () => {
+            this.deleteRelationshipFromContext();
+        });
+
         // Keyboard shortcuts
         d3.select('body').on('keydown', (event) => {
             this.handleKeyDown(event);
@@ -230,7 +312,7 @@ class C4DiagramEditor {
     }
 
     renderElement(element) {
-        const group = this.mainGroup
+        const group = this.elementsGroup
             .append('g')
             .attr('class', 'c4-element')
             .attr('data-id', element.id)
@@ -297,22 +379,30 @@ class C4DiagramEditor {
     }
 
     setupElementInteractions(group, element) {
-        // Click to select
+        // Click to select or handle connection mode
         group.on('click', (event) => {
             event.stopPropagation();
-            this.selectElement(element.id);
+            if (this.connectionMode) {
+                this.handleElementClickForConnection(element.id);
+            } else {
+                this.selectElement(element.id);
+            }
         });
 
         // Double-click to edit name
         group.on('dblclick', (event) => {
             event.stopPropagation();
-            this.editElementName(element.id);
+            if (!this.connectionMode) {
+                this.editElementName(element.id);
+            }
         });
 
         // Context menu
         group.on('contextmenu', (event) => {
             event.preventDefault();
-            this.showContextMenu(event, element.id);
+            if (!this.connectionMode) {
+                this.showContextMenu(event, element.id);
+            }
         });
 
         // Drag behavior
@@ -365,7 +455,14 @@ class C4DiagramEditor {
         d3.selectAll('.c4-element').classed('selected', false);
         d3.selectAll('.c4-relationship').classed('selected', false);
         this.selectedElement = null;
+        this.selectedRelationship = null;
         this.hideElementProperties();
+        this.hideRelationshipProperties();
+    }
+
+    hideRelationshipProperties() {
+        document.getElementById('relationshipProperties').style.display = 'none';
+        document.getElementById('noSelection').style.display = 'block';
     }
 
     showElementProperties(element) {
@@ -599,6 +696,9 @@ class C4DiagramEditor {
                 });
             }
 
+            // Update relationship list
+            this.updateRelationshipsList();
+
             // Update diagram title
             d3.select('#diagramTitle').text(diagram.name || 'Untitled Diagram');
             d3.select('#diagramMeta').text(`C4 ${diagram.type} Diagram`);
@@ -744,11 +844,18 @@ class C4DiagramEditor {
     }
 
     handleKeyDown(event) {
-        if (event.key === 'Delete' && this.selectedElement) {
-            this.deleteSelectedElement();
+        if (event.key === 'Delete') {
+            if (this.selectedElement) {
+                this.deleteSelectedElement();
+            } else if (this.selectedRelationship) {
+                this.deleteSelectedRelationship();
+            }
         } else if (event.key === 'Escape') {
-            this.clearSelection();
-            this.cancelConnection();
+            if (this.connectionMode) {
+                this.exitConnectionMode();
+            } else {
+                this.clearSelection();
+            }
         }
     }
 
@@ -816,6 +923,507 @@ class C4DiagramEditor {
     showCollaborationNotification(message) {
         console.log('Collaboration:', message);
         // You could show this in a toast or status bar
+    }
+
+    // === RELATIONSHIP MANAGEMENT METHODS ===
+
+    showRelationshipModal(relationshipId = null) {
+        this.populateElementDropdowns();
+        
+        if (relationshipId) {
+            // Editing existing relationship
+            this.isEditingRelationship = true;
+            this.currentRelationshipId = relationshipId;
+            const relationship = this.relationships.get(relationshipId);
+            
+            if (relationship) {
+                document.getElementById('relationshipModalTitle').textContent = 'Edit Relationship';
+                document.getElementById('modalSourceElement').value = relationship.sourceId;
+                document.getElementById('modalTargetElement').value = relationship.targetId;
+                document.getElementById('modalRelationshipDescription').value = relationship.description || '';
+                document.getElementById('modalRelationshipTechnology').value = relationship.technology || '';
+                document.getElementById('modalRelationshipColor').value = relationship.style?.color || '#6c757d';
+                document.getElementById('modalRelationshipWidth').value = relationship.style?.width || 2;
+                document.getElementById('modalRelationshipLineStyle').value = relationship.style?.lineStyle || 'solid';
+                document.getElementById('modalRelationshipArrowStyle').value = relationship.style?.arrowStyle || 'arrow';
+                document.getElementById('widthValue').textContent = `${relationship.style?.width || 2}px`;
+            }
+        } else {
+            // Creating new relationship
+            this.isEditingRelationship = false;
+            this.currentRelationshipId = null;
+            document.getElementById('relationshipModalTitle').textContent = 'Add Relationship';
+            document.getElementById('relationshipModalForm').reset();
+            document.getElementById('modalRelationshipColor').value = '#6c757d';
+            document.getElementById('modalRelationshipWidth').value = 2;
+            document.getElementById('widthValue').textContent = '2px';
+        }
+
+        const modal = new bootstrap.Modal(document.getElementById('relationshipModal'));
+        modal.show();
+    }
+
+    populateElementDropdowns() {
+        const sourceSelect = document.getElementById('modalSourceElement');
+        const targetSelect = document.getElementById('modalTargetElement');
+        
+        // Clear existing options except first
+        sourceSelect.innerHTML = '<option value="">Select source element...</option>';
+        targetSelect.innerHTML = '<option value="">Select target element...</option>';
+        
+        // Add elements to dropdowns
+        this.elements.forEach((element, id) => {
+            const sourceOption = document.createElement('option');
+            sourceOption.value = id;
+            sourceOption.textContent = element.name;
+            sourceSelect.appendChild(sourceOption);
+            
+            const targetOption = document.createElement('option');
+            targetOption.value = id;
+            targetOption.textContent = element.name;
+            targetSelect.appendChild(targetOption);
+        });
+    }
+
+    saveRelationshipFromModal() {
+        const form = document.getElementById('relationshipModalForm');
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
+
+        const sourceId = document.getElementById('modalSourceElement').value;
+        const targetId = document.getElementById('modalTargetElement').value;
+        const description = document.getElementById('modalRelationshipDescription').value;
+        const technology = document.getElementById('modalRelationshipTechnology').value;
+        const color = document.getElementById('modalRelationshipColor').value;
+        const width = document.getElementById('modalRelationshipWidth').value;
+        const lineStyle = document.getElementById('modalRelationshipLineStyle').value;
+        const arrowStyle = document.getElementById('modalRelationshipArrowStyle').value;
+
+        if (sourceId === targetId) {
+            alert('Source and target elements cannot be the same');
+            return;
+        }
+
+        const relationshipData = {
+            id: this.isEditingRelationship ? this.currentRelationshipId : this.generateId(),
+            sourceId: sourceId,
+            targetId: targetId,
+            description: description,
+            technology: technology,
+            style: {
+                color: color,
+                width: parseFloat(width),
+                lineStyle: lineStyle,
+                arrowStyle: arrowStyle
+            }
+        };
+
+        if (this.isEditingRelationship) {
+            this.updateRelationship(relationshipData);
+        } else {
+            this.addRelationship(relationshipData);
+        }
+
+        const modal = bootstrap.Modal.getInstance(document.getElementById('relationshipModal'));
+        modal.hide();
+    }
+
+    addRelationship(relationshipData) {
+        this.relationships.set(relationshipData.id, relationshipData);
+        this.renderRelationship(relationshipData);
+        this.updateRelationshipsList();
+
+        // Broadcast to collaborators
+        if (this.isCollaborationEnabled) {
+            this.connection.invoke('AddRelationship', this.diagramId, relationshipData);
+        }
+    }
+
+    updateRelationship(relationshipData) {
+        this.relationships.set(relationshipData.id, relationshipData);
+        
+        // Remove old visual representation
+        d3.select(`[data-id="${relationshipData.id}"]`).remove();
+        
+        // Render updated relationship
+        this.renderRelationship(relationshipData);
+        this.updateRelationshipsList();
+
+        // Broadcast to collaborators
+        if (this.isCollaborationEnabled) {
+            this.connection.invoke('UpdateRelationship', this.diagramId, relationshipData);
+        }
+    }
+
+    deleteRelationship(relationshipId) {
+        if (this.relationships.has(relationshipId)) {
+            this.relationships.delete(relationshipId);
+            d3.select(`[data-id="${relationshipId}"]`).remove();
+            this.updateRelationshipsList();
+            
+            // Clear selection if this relationship was selected
+            if (this.selectedRelationship === relationshipId) {
+                this.clearRelationshipSelection();
+            }
+
+            // Broadcast to collaborators
+            if (this.isCollaborationEnabled) {
+                this.connection.invoke('RemoveRelationship', this.diagramId, relationshipId);
+            }
+        }
+    }
+
+    deleteSelectedRelationship() {
+        if (this.selectedRelationship) {
+            if (confirm('Are you sure you want to delete this relationship?')) {
+                this.deleteRelationship(this.selectedRelationship);
+            }
+        }
+    }
+
+    toggleConnectionMode() {
+        this.connectionMode = !this.connectionMode;
+        const btn = document.getElementById('connectionModeBtn');
+        
+        if (this.connectionMode) {
+            btn.classList.add('active');
+            btn.classList.remove('btn-outline-secondary');
+            btn.classList.add('btn-secondary');
+            this.svg.style('cursor', 'crosshair');
+            
+            // Show connection mode modal
+            const modal = new bootstrap.Modal(document.getElementById('connectionModeModal'));
+            modal.show();
+        } else {
+            this.exitConnectionMode();
+        }
+    }
+
+    exitConnectionMode() {
+        this.connectionMode = false;
+        this.connectionStart = null;
+        const btn = document.getElementById('connectionModeBtn');
+        
+        btn.classList.remove('active');
+        btn.classList.add('btn-outline-secondary');
+        btn.classList.remove('btn-secondary');
+        this.svg.style('cursor', 'default');
+        
+        // Hide connection mode modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('connectionModeModal'));
+        if (modal) {
+            modal.hide();
+        }
+    }
+
+    handleElementClickForConnection(elementId) {
+        if (!this.connectionMode) return;
+
+        if (!this.connectionStart) {
+            // First click - set source
+            this.connectionStart = elementId;
+            d3.select(`[data-id="${elementId}"]`).classed('connection-source', true);
+        } else if (this.connectionStart !== elementId) {
+            // Second click - create connection
+            d3.select(`[data-id="${this.connectionStart}"]`).classed('connection-source', false);
+            
+            // Pre-populate modal with selected elements
+            const sourceElement = this.elements.get(this.connectionStart);
+            const targetElement = this.elements.get(elementId);
+            
+            this.showRelationshipModal();
+            
+            // Set the dropdowns after modal is shown
+            setTimeout(() => {
+                document.getElementById('modalSourceElement').value = this.connectionStart;
+                document.getElementById('modalTargetElement').value = elementId;
+                document.getElementById('modalRelationshipDescription').value = `${sourceElement.name} uses ${targetElement.name}`;
+            }, 100);
+            
+            this.connectionStart = null;
+        }
+    }
+
+    selectRelationship(relationshipId) {
+        this.clearSelection();  // Clear element selection
+        this.selectedRelationship = relationshipId;
+        
+        // Highlight selected relationship
+        d3.selectAll('.c4-relationship').classed('selected', false);
+        d3.select(`[data-id="${relationshipId}"]`).classed('selected', true);
+        
+        // Show relationship properties
+        this.showRelationshipProperties(relationshipId);
+    }
+
+    clearRelationshipSelection() {
+        this.selectedRelationship = null;
+        d3.selectAll('.c4-relationship').classed('selected', false);
+        document.getElementById('relationshipProperties').style.display = 'none';
+        document.getElementById('noSelection').style.display = 'block';
+    }
+
+    showRelationshipProperties(relationshipId) {
+        const relationship = this.relationships.get(relationshipId);
+        if (!relationship) return;
+
+        document.getElementById('noSelection').style.display = 'none';
+        document.getElementById('elementProperties').style.display = 'none';
+        document.getElementById('relationshipProperties').style.display = 'block';
+
+        // Populate relationship form
+        document.getElementById('relationshipDescription').value = relationship.description || '';
+        document.getElementById('relationshipTechnology').value = relationship.technology || '';
+        document.getElementById('relationshipType').value = relationship.type || 'uses';
+        document.getElementById('relationshipColor').value = relationship.style?.color || '#6c757d';
+        document.getElementById('relationshipWidth').value = relationship.style?.width || 2;
+        document.getElementById('relationshipLineStyle').value = relationship.style?.lineStyle || 'solid';
+    }
+
+    updateSelectedRelationshipProperties() {
+        if (!this.selectedRelationship) return;
+
+        const relationship = this.relationships.get(this.selectedRelationship);
+        if (!relationship) return;
+
+        const updatedRelationship = {
+            ...relationship,
+            description: document.getElementById('relationshipDescription').value,
+            technology: document.getElementById('relationshipTechnology').value,
+            type: document.getElementById('relationshipType').value,
+            style: {
+                ...relationship.style,
+                color: document.getElementById('relationshipColor').value,
+                width: parseFloat(document.getElementById('relationshipWidth').value),
+                lineStyle: document.getElementById('relationshipLineStyle').value
+            }
+        };
+
+        this.updateRelationship(updatedRelationship);
+    }
+
+    updateRelationshipsList() {
+        const container = document.getElementById('relationshipList');
+        const noRelationships = document.getElementById('noRelationships');
+        
+        if (this.relationships.size === 0) {
+            noRelationships.style.display = 'block';
+            container.innerHTML = '<div class="text-muted small text-center py-2" id="noRelationships">No relationships defined</div>';
+            return;
+        }
+
+        noRelationships.style.display = 'none';
+        container.innerHTML = '';
+
+        this.relationships.forEach((relationship, id) => {
+            const sourceElement = this.elements.get(relationship.sourceId);
+            const targetElement = this.elements.get(relationship.targetId);
+            
+            if (!sourceElement || !targetElement) return;
+
+            const item = document.createElement('div');
+            item.className = 'list-group-item list-group-item-action py-2';
+            item.setAttribute('data-relationship-id', id);
+            
+            item.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="flex-grow-1">
+                        <div class="small fw-medium">${sourceElement.name} → ${targetElement.name}</div>
+                        <div class="small text-muted">${relationship.description || 'No description'}</div>
+                    </div>
+                    <div class="btn-group btn-group-sm" role="group">
+                        <button type="button" class="btn btn-outline-primary btn-sm edit-relationship" title="Edit">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button type="button" class="btn btn-outline-danger btn-sm delete-relationship" title="Delete">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            // Add event listeners
+            item.addEventListener('click', (e) => {
+                if (!e.target.closest('.btn-group')) {
+                    this.selectRelationship(id);
+                }
+            });
+
+            item.querySelector('.edit-relationship').addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.showRelationshipModal(id);
+            });
+
+            item.querySelector('.delete-relationship').addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (confirm('Are you sure you want to delete this relationship?')) {
+                    this.deleteRelationship(id);
+                }
+            });
+
+            container.appendChild(item);
+        });
+    }
+
+    // Context menu methods
+    editRelationshipFromContext() {
+        if (this.selectedRelationship) {
+            this.showRelationshipModal(this.selectedRelationship);
+        }
+    }
+
+    duplicateRelationshipFromContext() {
+        if (this.selectedRelationship) {
+            const original = this.relationships.get(this.selectedRelationship);
+            if (original) {
+                const duplicate = {
+                    ...original,
+                    id: this.generateId()
+                };
+                this.addRelationship(duplicate);
+            }
+        }
+    }
+
+    deleteRelationshipFromContext() {
+        if (this.selectedRelationship) {
+            if (confirm('Are you sure you want to delete this relationship?')) {
+                this.deleteRelationship(this.selectedRelationship);
+            }
+        }
+    }
+
+    // Enhanced renderRelationship method with improved styling
+    renderRelationship(relationship) {
+        const fromElement = this.elements.get(relationship.sourceId);
+        const toElement = this.elements.get(relationship.targetId);
+
+        if (!fromElement || !toElement) return;
+
+        const fromCenter = {
+            x: fromElement.x + fromElement.width / 2,
+            y: fromElement.y + fromElement.height / 2
+        };
+
+        const toCenter = {
+            x: toElement.x + toElement.width / 2,
+            y: toElement.y + toElement.height / 2
+        };
+
+        // Calculate connection points on element edges
+        const fromPoint = this.getConnectionPoint(fromElement, toCenter);
+        const toPoint = this.getConnectionPoint(toElement, fromCenter);
+
+        const group = this.relationshipsGroup
+            .append('g')
+            .attr('class', 'c4-relationship')
+            .attr('data-id', relationship.id);
+
+        // Create path for the relationship
+        const path = group.append('path')
+            .attr('d', this.createRelationshipPath(fromPoint, toPoint))
+            .attr('fill', 'none')
+            .attr('stroke', relationship.style?.color || '#6c757d')
+            .attr('stroke-width', relationship.style?.width || 2)
+            .attr('marker-end', `url(#${relationship.style?.arrowStyle || 'arrow'})`)
+            .attr('cursor', 'pointer');
+
+        // Apply line style
+        if (relationship.style?.lineStyle === 'dashed') {
+            path.attr('stroke-dasharray', '5,5');
+        } else if (relationship.style?.lineStyle === 'dotted') {
+            path.attr('stroke-dasharray', '2,2');
+        }
+
+        // Add description label if exists
+        if (relationship.description) {
+            const midX = (fromPoint.x + toPoint.x) / 2;
+            const midY = (fromPoint.y + toPoint.y) / 2;
+
+            const label = group.append('text')
+                .attr('class', 'c4-relationship-label')
+                .attr('x', midX)
+                .attr('y', midY - 5)
+                .attr('text-anchor', 'middle')
+                .attr('fill', relationship.style?.color || '#6c757d')
+                .style('font-size', '12px')
+                .style('font-weight', 'bold')
+                .text(relationship.description);
+
+            // Add background for better readability
+            const bbox = label.node().getBBox();
+            group.insert('rect', '.c4-relationship-label')
+                .attr('x', bbox.x - 4)
+                .attr('y', bbox.y - 2)
+                .attr('width', bbox.width + 8)
+                .attr('height', bbox.height + 4)
+                .attr('fill', 'white')
+                .attr('fill-opacity', 0.8)
+                .attr('rx', 3);
+        }
+
+        // Add technology label if exists
+        if (relationship.technology) {
+            const midX = (fromPoint.x + toPoint.x) / 2;
+            const midY = (fromPoint.y + toPoint.y) / 2;
+
+            group.append('text')
+                .attr('class', 'c4-relationship-tech')
+                .attr('x', midX)
+                .attr('y', midY + 15)
+                .attr('text-anchor', 'middle')
+                .attr('fill', '#666')
+                .style('font-size', '10px')
+                .style('font-style', 'italic')
+                .text(`[${relationship.technology}]`);
+        }
+
+        // Setup interactions
+        group.on('click', (event) => {
+            event.stopPropagation();
+            this.selectRelationship(relationship.id);
+        });
+
+        group.on('contextmenu', (event) => {
+            event.preventDefault();
+            this.showRelationshipContextMenu(event, relationship.id);
+        });
+    }
+
+    createRelationshipPath(from, to) {
+        // Create a curved path for better visual appeal
+        const dx = to.x - from.x;
+        const dy = to.y - from.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        // Control point for curve
+        const controlOffset = Math.min(distance * 0.3, 50);
+        const midX = (from.x + to.x) / 2;
+        const midY = (from.y + to.y) / 2;
+        
+        // Perpendicular offset for curve
+        const perpX = -dy / distance * controlOffset;
+        const perpY = dx / distance * controlOffset;
+        
+        return `M ${from.x} ${from.y} Q ${midX + perpX} ${midY + perpY} ${to.x} ${to.y}`;
+    }
+
+    showRelationshipContextMenu(event, relationshipId) {
+        this.selectedRelationship = relationshipId;
+        const menu = document.getElementById('relationshipContextMenu');
+        
+        menu.style.display = 'block';
+        menu.style.left = `${event.pageX}px`;
+        menu.style.top = `${event.pageY}px`;
+        
+        // Hide menu when clicking elsewhere
+        setTimeout(() => {
+            document.addEventListener('click', () => {
+                menu.style.display = 'none';
+            }, { once: true });
+        }, 100);
     }
 }
 

@@ -1,0 +1,421 @@
+@model C4Engineering.Web.Models.Project.CreateProjectRequest
+@{
+    ViewData["Title"] = "Create Project from Template";
+    var template = ViewBag.Template as C4Engineering.Web.Models.Project.ProjectTemplate;
+    var templates = ViewBag.Templates as IEnumerable<C4Engineering.Web.Models.Project.ProjectTemplate> ?? Enumerable.Empty<C4Engineering.Web.Models.Project.ProjectTemplate>();
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h2">Create Project from Template</h1>
+    <div>
+        <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Projects
+        </a>
+        <a href="@Url.Action("Create")" class="btn btn-outline-primary">
+            <i class="bi bi-gear"></i> Custom Project
+        </a>
+    </div>
+</div>
+
+@if (template != null)
+{
+    <!-- Template Overview -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-lightning-charge"></i> @template.Name Template
+                    </h5>
+                    <p class="card-text mb-0 opacity-75">@template.Description</p>
+                </div>
+                <div class="col-auto">
+                    <span class="badge bg-light text-primary">@template.Category</span>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h6 class="text-muted mb-2">What's Included:</h6>
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Project type: <strong>@template.DefaultType</strong></li>
+                        @if (template.PreConfiguredServices.Any())
+                        {
+                            <li><i class="bi bi-check-circle text-success me-2"></i>Pre-configured services (@template.PreConfiguredServices.Count)</li>
+                        }
+                        @if (template.PreConfiguredDiagrams.Any())
+                        {
+                            <li><i class="bi bi-check-circle text-success me-2"></i>Sample diagrams (@template.PreConfiguredDiagrams.Count)</li>
+                        }
+                        @if (template.DefaultTags.Any())
+                        {
+                            <li><i class="bi bi-check-circle text-success me-2"></i>Default tags and categorization</li>
+                        }
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Best practice project structure</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Recommended settings and configuration</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    @if (template.DefaultTags.Any())
+                    {
+                        <h6 class="text-muted mb-2">Tags:</h6>
+                        <div class="mb-3">
+                            @foreach (var tag in template.DefaultTags)
+                            {
+                                <span class="badge bg-secondary me-1">@tag</span>
+                            }
+                        </div>
+                    }
+                    
+                    @if (template.PreConfiguredServices.Any())
+                    {
+                        <h6 class="text-muted mb-2">Services:</h6>
+                        <div class="mb-3">
+                            @foreach (var service in template.PreConfiguredServices.Take(5))
+                            {
+                                <div class="small text-muted">
+                                    <i class="bi bi-gear me-1"></i>@service
+                                </div>
+                            }
+                            @if (template.PreConfiguredServices.Count > 5)
+                            {
+                                <div class="small text-muted">
+                                    <i class="bi bi-three-dots me-1"></i>and @(template.PreConfiguredServices.Count - 5) more
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Project Creation Form -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">
+                <i class="bi bi-form"></i> Project Details
+            </h5>
+        </div>
+        <div class="card-body">
+            <form asp-action="CreateFromTemplate" asp-route-templateId="@template.Id" method="post">
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="alert alert-danger">
+                        <h6>Please correct the following errors:</h6>
+                        <ul class="mb-0">
+                            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                            {
+                                <li>@error.ErrorMessage</li>
+                            }
+                        </ul>
+                    </div>
+                }
+
+                <!-- Basic Information -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="Id" class="form-label">Project ID *</label>
+                            <input asp-for="Id" class="form-control" placeholder="my-awesome-project" required>
+                            <div class="form-text">Unique identifier for your project (lowercase, hyphens allowed)</div>
+                            <span asp-validation-for="Id" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label">Project Name *</label>
+                            <input asp-for="Name" class="form-control" placeholder="My Awesome Project" required>
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label">Description</label>
+                    <textarea asp-for="Description" class="form-control" rows="3" 
+                              placeholder="Describe what this project is about..."></textarea>
+                    <div class="form-text">You can customize the template description or write your own</div>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="Owner" class="form-label">Owner *</label>
+                            <input asp-for="Owner" class="form-control" placeholder="Team or person responsible" required>
+                            <span asp-validation-for="Owner" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="Type" class="form-label">Project Type</label>
+                            <select asp-for="Type" class="form-select" disabled>
+                                <option value="@template.DefaultType" selected>@template.DefaultType</option>
+                            </select>
+                            <div class="form-text">Type is pre-configured by the template</div>
+                            <input type="hidden" asp-for="Type" value="@template.DefaultType" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tags (editable, pre-populated) -->
+                <div class="mb-3">
+                    <label for="Tags" class="form-label">Tags</label>
+                    <input type="text" id="Tags" name="Tags" class="form-control" 
+                           value="@string.Join(", ", Model?.Tags ?? template.DefaultTags)"
+                           placeholder="Comma-separated tags">
+                    <div class="form-text">Tags from template are pre-filled. You can add more or modify them.</div>
+                </div>
+
+                <!-- Template-specific Settings -->
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h6 class="mb-0">
+                            <i class="bi bi-gear"></i> Project Settings 
+                            <small class="text-muted">(Template Defaults Applied)</small>
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="Repository" class="form-label">Repository URL</label>
+                                    <input type="url" id="Repository" name="Settings.Repository" class="form-control" 
+                                           value="@(Model?.Settings?.Repository ?? template.DefaultSettings.Repository ?? "")"
+                                           placeholder="https://github.com/company/project">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="Documentation" class="form-label">Documentation URL</label>
+                                    <input type="url" id="Documentation" name="Settings.Documentation" class="form-control" 
+                                           value="@(Model?.Settings?.Documentation ?? template.DefaultSettings.Documentation ?? "")"
+                                           placeholder="https://docs.company.com/project">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="SlackChannel" class="form-label">Slack Channel</label>
+                                    <input type="text" id="SlackChannel" name="Settings.SlackChannel" class="form-control" 
+                                           value="@(Model?.Settings?.SlackChannel ?? template.DefaultSettings.SlackChannel ?? "")"
+                                           placeholder="#project-team">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="JiraProject" class="form-label">Jira Project</label>
+                                    <input type="text" id="JiraProject" name="Settings.JiraProject" class="form-control" 
+                                           value="@(Model?.Settings?.JiraProject ?? template.DefaultSettings.JiraProject ?? "")"
+                                           placeholder="PROJ">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="IsPublic" name="Settings.IsPublic" 
+                                           @(Model?.Settings?.IsPublic ?? template.DefaultSettings.IsPublic ? "checked" : "")>
+                                    <label class="form-check-label" for="IsPublic">
+                                        Public Project
+                                    </label>
+                                    <div class="form-text">Allow other teams to view this project</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="EnableNotifications" name="Settings.EnableNotifications" 
+                                           @(Model?.Settings?.EnableNotifications ?? template.DefaultSettings.EnableNotifications ? "checked" : "")>
+                                    <label class="form-check-label" for="EnableNotifications">
+                                        Enable Notifications
+                                    </label>
+                                    <div class="form-text">Receive updates about project activities</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Template Components Preview -->
+                @if (template.PreConfiguredServices.Any() || template.PreConfiguredDiagrams.Any())
+                {
+                    <div class="alert alert-info">
+                        <h6 class="alert-heading">
+                            <i class="bi bi-info-circle"></i> What happens after creation?
+                        </h6>
+                        <ul class="mb-0">
+                            @if (template.PreConfiguredServices.Any())
+                            {
+                                <li>Pre-configured services will be associated with your project</li>
+                            }
+                            @if (template.PreConfiguredDiagrams.Any())
+                            {
+                                <li>Sample architecture diagrams will be created</li>
+                            }
+                            <li>You can add more services, diagrams, and pipelines after creation</li>
+                            <li>All template components can be customized to fit your needs</li>
+                        </ul>
+                    </div>
+                }
+
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <a href="@Url.Action("Index")" class="btn btn-secondary">Cancel</a>
+                        <a href="@Url.Action("Create")" class="btn btn-outline-secondary ms-2">
+                            <i class="bi bi-gear"></i> Custom Project Instead
+                        </a>
+                    </div>
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="bi bi-lightning-charge"></i> Create Project from Template
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+}
+else
+{
+    <!-- Template not found -->
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-warning">
+                <div class="card-body text-center">
+                    <i class="bi bi-exclamation-triangle display-1 text-warning mb-3"></i>
+                    <h4 class="card-title text-warning">Template Not Found</h4>
+                    <p class="card-text">The requested project template could not be found or may have been removed.</p>
+                    <div>
+                        <a href="@Url.Action("Create")" class="btn btn-primary">
+                            <i class="bi bi-plus"></i> Create Custom Project
+                        </a>
+                        <a href="@Url.Action("Index")" class="btn btn-outline-secondary ms-2">
+                            <i class="bi bi-arrow-left"></i> Back to Projects
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Other Templates -->
+@if (templates.Any() && template != null)
+{
+    <div class="mt-5">
+        <h4>Other Templates</h4>
+        <div class="row">
+            @foreach (var otherTemplate in templates.Where(t => t.Id != template.Id))
+            {
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100 template-card">
+                        <div class="card-body">
+                            <h6 class="card-title">@otherTemplate.Name</h6>
+                            <p class="card-text small">@otherTemplate.Description</p>
+                            <div class="mb-2">
+                                <span class="badge bg-light text-dark">@otherTemplate.Category</span>
+                            </div>
+                            @if (otherTemplate.DefaultTags.Any())
+                            {
+                                <div class="mb-3">
+                                    @foreach (var tag in otherTemplate.DefaultTags.Take(3))
+                                    {
+                                        <span class="badge bg-secondary me-1 small">@tag</span>
+                                    }
+                                </div>
+                            }
+                            <a href="@Url.Action("CreateFromTemplate", new { templateId = otherTemplate.Id })" 
+                               class="btn btn-outline-primary btn-sm">
+                                Switch Template
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        // Auto-generate project ID from name
+        document.getElementById('Name').addEventListener('input', function() {
+            const name = this.value;
+            const id = name.toLowerCase()
+                .replace(/[^a-z0-9\s-]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-')
+                .replace(/^-|-$/g, '');
+            
+            const idField = document.getElementById('Id');
+            if (!idField.dataset.userModified) {
+                idField.value = id;
+            }
+        });
+        
+        // Mark ID field as user-modified when changed directly
+        document.getElementById('Id').addEventListener('input', function() {
+            this.dataset.userModified = 'true';
+        });
+
+        // Form validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const requiredFields = ['Id', 'Name', 'Owner'];
+            let hasErrors = false;
+
+            requiredFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (field && !field.value.trim()) {
+                    field.classList.add('is-invalid');
+                    hasErrors = true;
+                } else if (field) {
+                    field.classList.remove('is-invalid');
+                }
+            });
+
+            if (hasErrors) {
+                e.preventDefault();
+                alert('Please fill in all required fields.');
+            }
+        });
+    </script>
+}
+
+@section Styles {
+    <style>
+        .template-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .template-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .form-text {
+            font-size: 0.875em;
+        }
+        
+        .card-header h6 {
+            color: var(--bs-primary);
+        }
+
+        .bg-primary .card-title {
+            color: white !important;
+        }
+
+        .is-invalid {
+            border-color: #dc3545;
+        }
+
+        .alert-heading {
+            font-weight: 600;
+        }
+
+        .badge {
+            font-size: 0.75em;
+        }
+    </style>
+}

@@ -2,7 +2,7 @@
   "id": "container-sample",
   "name": "User Service - Container Diagram",
   "description": "Container view of the user management service showing internal architecture",
-  "type": "Container",
+  "type": "container",
   "system": "user-management",
   "elements": [
     {
@@ -18,7 +18,7 @@
     },
     {
       "id": "web-app",
-      "type": "web-app",
+      "type": "container",
       "name": "Web Application",
       "description": "React-based user interface",
       "x": 200,
@@ -29,7 +29,7 @@
     },
     {
       "id": "mobile-app",
-      "type": "mobile-app",
+      "type": "container",
       "name": "Mobile App",
       "description": "Native mobile application",
       "x": 400,
@@ -40,7 +40,7 @@
     },
     {
       "id": "api-gateway",
-      "type": "api",
+      "type": "container",
       "name": "API Gateway",
       "description": "Routes requests to microservices",
       "x": 300,
@@ -84,7 +84,7 @@
     },
     {
       "id": "user-database",
-      "type": "database",
+      "type": "externalSystem",
       "name": "User Database",
       "description": "Stores user data and profiles",
       "x": 300,
@@ -95,7 +95,7 @@
     },
     {
       "id": "cache",
-      "type": "database",
+      "type": "externalSystem",
       "name": "Redis Cache",
       "description": "Caches frequently accessed data",
       "x": 500,
