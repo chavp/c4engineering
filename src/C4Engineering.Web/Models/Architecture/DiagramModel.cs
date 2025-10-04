@@ -61,10 +61,31 @@ public record ElementStyle
 
 public record RelationshipStyle
 {
-    public string? LineStyle { get; init; }
-    public string? ArrowStyle { get; init; }
-    public string? Color { get; init; }
-    public double? Width { get; init; }
+    public string? LineStyle { get; init; } = "solid"; // solid, dashed, dotted
+    public string? ArrowStyle { get; init; } = "arrow"; // arrow, diamond, circle, none, double, open, filled
+    public string? Color { get; init; } = "#6c757d";
+    public double? Width { get; init; } = 2;
+    public string? ConnectionType { get; init; } = "curved"; // straight, curved, orthogonal, bezier, stepped
+    public ConnectionPoints? ConnectionPoints { get; init; } = new();
+    public string? StartArrowStyle { get; init; } = "none"; // For bidirectional arrows
+    public string? Pattern { get; init; } = "none"; // none, wave, zigzag
+    public double? Opacity { get; init; } = 1.0;
+    public string? Shadow { get; init; } = "none"; // none, light, medium, heavy
+    public List<ControlPoint>? ControlPoints { get; init; } = new(); // For custom bezier curves
+}
+
+public record ConnectionPoints
+{
+    public string? SourceAnchor { get; init; } = "auto"; // auto, top, right, bottom, left, center
+    public string? TargetAnchor { get; init; } = "auto";
+    public Position? SourceOffset { get; init; } = new();
+    public Position? TargetOffset { get; init; } = new();
+}
+
+public record ControlPoint
+{
+    public Position Position { get; init; } = new();
+    public string? Type { get; init; } = "smooth"; // smooth, sharp, symmetric
 }
 
 public record DiagramMetadata

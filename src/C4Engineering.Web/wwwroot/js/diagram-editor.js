@@ -41,6 +41,21 @@ class C4DiagramEditor {
         this.loadDiagram();
     }
 
+    // Helper method to create arrow markers
+    createArrowMarker(defs, id, path, fill) {
+        defs.append('marker')
+            .attr('id', id)
+            .attr('viewBox', '0 -5 10 10')
+            .attr('refX', id.includes('start') ? 2 : 8)
+            .attr('refY', 0)
+            .attr('markerWidth', 6)
+            .attr('markerHeight', 6)
+            .attr('orient', 'auto')
+            .append('path')
+            .attr('d', path)
+            .attr('fill', fill);
+    }
+
     setupSVG() {
         const container = d3.select('#diagramContainer');
         const containerRect = container.node().getBoundingClientRect();
@@ -53,36 +68,18 @@ class C4DiagramEditor {
             .attr('height', '600px')
             .style('background', 'transparent');
 
-        // Define arrow markers for different styles
+        // Define comprehensive arrow markers and patterns for Draw.io-style connections
         const defs = this.svg.append('defs');
         
-        // Standard arrow
-        defs.append('marker')
-            .attr('id', 'arrow')
-            .attr('viewBox', '0 -5 10 10')
-            .attr('refX', 8)
-            .attr('refY', 0)
-            .attr('markerWidth', 6)
-            .attr('markerHeight', 6)
-            .attr('orient', 'auto')
-            .append('path')
-            .attr('d', 'M0,-5L10,0L0,5')
-            .attr('fill', '#495057');
-
-        // Diamond marker
-        defs.append('marker')
-            .attr('id', 'diamond')
-            .attr('viewBox', '0 -5 10 10')
-            .attr('refX', 5)
-            .attr('refY', 0)
-            .attr('markerWidth', 8)
-            .attr('markerHeight', 8)
-            .attr('orient', 'auto')
-            .append('path')
-            .attr('d', 'M0,0L5,-5L10,0L5,5Z')
-            .attr('fill', '#495057');
-
-        // Circle marker
+        // Standard arrow markers
+        this.createArrowMarker(defs, 'arrow', 'M0,-5L10,0L0,5', '#495057');
+        this.createArrowMarker(defs, 'arrow-start', 'M10,-5L0,0L10,5', '#495057');
+        
+        // Diamond markers
+        this.createArrowMarker(defs, 'diamond', 'M0,0L5,-5L10,0L5,5Z', '#495057');
+        this.createArrowMarker(defs, 'diamond-start', 'M10,0L5,-5L0,0L5,5Z', '#495057');
+        
+        // Circle markers
         defs.append('marker')
             .attr('id', 'circle')
             .attr('viewBox', '0 -5 10 10')
@@ -96,6 +93,100 @@ class C4DiagramEditor {
             .attr('cy', 0)
             .attr('r', 3)
             .attr('fill', '#495057');
+
+        defs.append('marker')
+            .attr('id', 'circle-start')
+            .attr('viewBox', '0 -5 10 10')
+            .attr('refX', 5)
+            .attr('refY', 0)
+            .attr('markerWidth', 8)
+            .attr('markerHeight', 8)
+            .attr('orient', 'auto')
+            .append('circle')
+            .attr('cx', 5)
+            .attr('cy', 0)
+            .attr('r', 3)
+            .attr('fill', '#495057');
+
+        // Square markers
+        this.createArrowMarker(defs, 'square', 'M2,2L8,2L8,8L2,8Z', '#495057');
+        this.createArrowMarker(defs, 'square-start', 'M2,2L8,2L8,8L2,8Z', '#495057');
+
+        // Open arrow markers
+        defs.append('marker')
+            .attr('id', 'open')
+            .attr('viewBox', '0 -5 10 10')
+            .attr('refX', 8)
+            .attr('refY', 0)
+            .attr('markerWidth', 6)
+            .attr('markerHeight', 6)
+            .attr('orient', 'auto')
+            .append('path')
+            .attr('d', 'M0,-5L10,0L0,5')
+            .attr('fill', 'none')
+            .attr('stroke', '#495057')
+            .attr('stroke-width', 2);
+
+        defs.append('marker')
+            .attr('id', 'open-start')
+            .attr('viewBox', '0 -5 10 10')
+            .attr('refX', 2)
+            .attr('refY', 0)
+            .attr('markerWidth', 6)
+            .attr('markerHeight', 6)
+            .attr('orient', 'auto')
+            .append('path')
+            .attr('d', 'M10,-5L0,0L10,5')
+            .attr('fill', 'none')
+            .attr('stroke', '#495057')
+            .attr('stroke-width', 2);
+
+        // Filled arrow markers (thicker)
+        this.createArrowMarker(defs, 'filled', 'M0,-8L15,0L0,8Z', '#495057');
+        this.createArrowMarker(defs, 'filled-start', 'M15,-8L0,0L15,8Z', '#495057');
+
+        // Double arrow markers
+        defs.append('marker')
+            .attr('id', 'double')
+            .attr('viewBox', '0 -8 20 16')
+            .attr('refX', 18)
+            .attr('refY', 0)
+            .attr('markerWidth', 10)
+            .attr('markerHeight', 10)
+            .attr('orient', 'auto')
+            .selectAll('path')
+            .data(['M0,-5L8,0L0,5', 'M8,-5L16,0L8,5'])
+            .enter()
+            .append('path')
+            .attr('d', d => d)
+            .attr('fill', '#495057');
+
+        // Wave filter for wave pattern
+        const waveFilter = defs.append('filter')
+            .attr('id', 'wave-filter');
+        
+        waveFilter.append('feTurbulence')
+            .attr('baseFrequency', '0.02')
+            .attr('numOctaves', '3')
+            .attr('result', 'noise');
+            
+        waveFilter.append('feDisplacementMap')
+            .attr('in', 'SourceGraphic')
+            .attr('in2', 'noise')
+            .attr('scale', '2');
+
+        // Patterns for advanced styling
+        const wavePattern = defs.append('pattern')
+            .attr('id', 'wave-pattern')
+            .attr('patternUnits', 'userSpaceOnUse')
+            .attr('width', 20)
+            .attr('height', 10);
+            
+        wavePattern.append('path')
+            .attr('d', 'M0,5 Q5,0 10,5 Q15,10 20,5')
+            .attr('stroke', '#6c757d')
+            .attr('stroke-width', 1)
+            .attr('fill', 'none');
 
         // Create main group for zoom/pan
         this.mainGroup = this.svg.append('g').attr('class', 'main-group');
@@ -216,7 +307,19 @@ class C4DiagramEditor {
 
         d3.select('#modalRelationshipWidth').on('input', (event) => {
             d3.select('#widthValue').text(`${event.target.value}px`);
+            this.updateConnectionPreview();
         });
+
+        d3.select('#modalRelationshipOpacity').on('input', (event) => {
+            d3.select('#opacityValue').text(`${Math.round(event.target.value * 100)}%`);
+            this.updateConnectionPreview();
+        });
+
+        // Add event listeners for all connection style controls
+        d3.selectAll('#modalConnectionType, #modalRelationshipLineStyle, #modalRelationshipPattern, #modalRelationshipStartArrow, #modalRelationshipArrowStyle, #modalSourceAnchor, #modalTargetAnchor, #modalRelationshipColor, #modalRelationshipShadow')
+            .on('change', () => {
+                this.updateConnectionPreview();
+            });
 
         // Context menu for relationships
         d3.select('#editRelationshipContext').on('click', () => {
@@ -942,11 +1045,25 @@ class C4DiagramEditor {
                 document.getElementById('modalTargetElement').value = relationship.targetId;
                 document.getElementById('modalRelationshipDescription').value = relationship.description || '';
                 document.getElementById('modalRelationshipTechnology').value = relationship.technology || '';
+                
+                // Connection and styling options
+                document.getElementById('modalConnectionType').value = relationship.style?.connectionType || 'curved';
                 document.getElementById('modalRelationshipColor').value = relationship.style?.color || '#6c757d';
                 document.getElementById('modalRelationshipWidth').value = relationship.style?.width || 2;
                 document.getElementById('modalRelationshipLineStyle').value = relationship.style?.lineStyle || 'solid';
+                document.getElementById('modalRelationshipPattern').value = relationship.style?.pattern || 'none';
+                document.getElementById('modalRelationshipStartArrow').value = relationship.style?.startArrowStyle || 'none';
                 document.getElementById('modalRelationshipArrowStyle').value = relationship.style?.arrowStyle || 'arrow';
+                document.getElementById('modalRelationshipOpacity').value = relationship.style?.opacity || 1.0;
+                document.getElementById('modalRelationshipShadow').value = relationship.style?.shadow || 'none';
+                
+                // Connection points
+                document.getElementById('modalSourceAnchor').value = relationship.style?.connectionPoints?.sourceAnchor || 'auto';
+                document.getElementById('modalTargetAnchor').value = relationship.style?.connectionPoints?.targetAnchor || 'auto';
+                
+                // Update display values
                 document.getElementById('widthValue').textContent = `${relationship.style?.width || 2}px`;
+                document.getElementById('opacityValue').textContent = `${Math.round((relationship.style?.opacity || 1.0) * 100)}%`;
             }
         } else {
             // Creating new relationship
@@ -954,13 +1071,31 @@ class C4DiagramEditor {
             this.currentRelationshipId = null;
             document.getElementById('relationshipModalTitle').textContent = 'Add Relationship';
             document.getElementById('relationshipModalForm').reset();
+            
+            // Set default values
+            document.getElementById('modalConnectionType').value = 'curved';
             document.getElementById('modalRelationshipColor').value = '#6c757d';
             document.getElementById('modalRelationshipWidth').value = 2;
+            document.getElementById('modalRelationshipLineStyle').value = 'solid';
+            document.getElementById('modalRelationshipPattern').value = 'none';
+            document.getElementById('modalRelationshipStartArrow').value = 'none';
+            document.getElementById('modalRelationshipArrowStyle').value = 'arrow';
+            document.getElementById('modalRelationshipOpacity').value = 1.0;
+            document.getElementById('modalRelationshipShadow').value = 'none';
+            document.getElementById('modalSourceAnchor').value = 'auto';
+            document.getElementById('modalTargetAnchor').value = 'auto';
+            
             document.getElementById('widthValue').textContent = '2px';
+            document.getElementById('opacityValue').textContent = '100%';
         }
 
         const modal = new bootstrap.Modal(document.getElementById('relationshipModal'));
         modal.show();
+        
+        // Initialize connection preview after modal is shown
+        setTimeout(() => {
+            this.updateConnectionPreview();
+        }, 200);
     }
 
     populateElementDropdowns() {
@@ -996,10 +1131,19 @@ class C4DiagramEditor {
         const targetId = document.getElementById('modalTargetElement').value;
         const description = document.getElementById('modalRelationshipDescription').value;
         const technology = document.getElementById('modalRelationshipTechnology').value;
+        
+        // Advanced styling options
+        const connectionType = document.getElementById('modalConnectionType').value;
         const color = document.getElementById('modalRelationshipColor').value;
         const width = document.getElementById('modalRelationshipWidth').value;
         const lineStyle = document.getElementById('modalRelationshipLineStyle').value;
-        const arrowStyle = document.getElementById('modalRelationshipArrowStyle').value;
+        const pattern = document.getElementById('modalRelationshipPattern').value;
+        const startArrow = document.getElementById('modalRelationshipStartArrow').value;
+        const endArrow = document.getElementById('modalRelationshipArrowStyle').value;
+        const opacity = document.getElementById('modalRelationshipOpacity').value;
+        const shadow = document.getElementById('modalRelationshipShadow').value;
+        const sourceAnchor = document.getElementById('modalSourceAnchor').value;
+        const targetAnchor = document.getElementById('modalTargetAnchor').value;
 
         if (sourceId === targetId) {
             alert('Source and target elements cannot be the same');
@@ -1013,10 +1157,19 @@ class C4DiagramEditor {
             description: description,
             technology: technology,
             style: {
+                connectionType: connectionType,
                 color: color,
                 width: parseFloat(width),
                 lineStyle: lineStyle,
-                arrowStyle: arrowStyle
+                pattern: pattern,
+                startArrowStyle: startArrow,
+                arrowStyle: endArrow,
+                opacity: parseFloat(opacity),
+                shadow: shadow,
+                connectionPoints: {
+                    sourceAnchor: sourceAnchor,
+                    targetAnchor: targetAnchor
+                }
             }
         };
 
@@ -1173,13 +1326,19 @@ class C4DiagramEditor {
         document.getElementById('elementProperties').style.display = 'none';
         document.getElementById('relationshipProperties').style.display = 'block';
 
-        // Populate relationship form
+        // Populate all relationship form fields
         document.getElementById('relationshipDescription').value = relationship.description || '';
         document.getElementById('relationshipTechnology').value = relationship.technology || '';
         document.getElementById('relationshipType').value = relationship.type || 'uses';
+        document.getElementById('relationshipConnectionType').value = relationship.style?.connectionType || 'curved';
         document.getElementById('relationshipColor').value = relationship.style?.color || '#6c757d';
         document.getElementById('relationshipWidth').value = relationship.style?.width || 2;
         document.getElementById('relationshipLineStyle').value = relationship.style?.lineStyle || 'solid';
+        document.getElementById('relationshipPattern').value = relationship.style?.pattern || 'none';
+        document.getElementById('relationshipStartArrow').value = relationship.style?.startArrowStyle || 'none';
+        document.getElementById('relationshipEndArrow').value = relationship.style?.arrowStyle || 'arrow';
+        document.getElementById('relationshipSourceAnchor').value = relationship.style?.connectionPoints?.sourceAnchor || 'auto';
+        document.getElementById('relationshipTargetAnchor').value = relationship.style?.connectionPoints?.targetAnchor || 'auto';
     }
 
     updateSelectedRelationshipProperties() {
@@ -1195,33 +1354,130 @@ class C4DiagramEditor {
             type: document.getElementById('relationshipType').value,
             style: {
                 ...relationship.style,
+                connectionType: document.getElementById('relationshipConnectionType').value,
                 color: document.getElementById('relationshipColor').value,
                 width: parseFloat(document.getElementById('relationshipWidth').value),
-                lineStyle: document.getElementById('relationshipLineStyle').value
+                lineStyle: document.getElementById('relationshipLineStyle').value,
+                pattern: document.getElementById('relationshipPattern').value,
+                startArrowStyle: document.getElementById('relationshipStartArrow').value,
+                arrowStyle: document.getElementById('relationshipEndArrow').value,
+                connectionPoints: {
+                    sourceAnchor: document.getElementById('relationshipSourceAnchor').value,
+                    targetAnchor: document.getElementById('relationshipTargetAnchor').value
+                }
             }
         };
 
         this.updateRelationship(updatedRelationship);
     }
 
+    // Update connection preview in modal
+    updateConnectionPreview() {
+        const preview = d3.select('#connectionPreview');
+        if (preview.empty()) return;
+
+        // Clear previous preview
+        preview.selectAll('*').remove();
+
+        // Get current form values
+        const connectionType = document.getElementById('modalConnectionType')?.value || 'curved';
+        const color = document.getElementById('modalRelationshipColor')?.value || '#6c757d';
+        const width = document.getElementById('modalRelationshipWidth')?.value || 2;
+        const lineStyle = document.getElementById('modalRelationshipLineStyle')?.value || 'solid';
+        const pattern = document.getElementById('modalRelationshipPattern')?.value || 'none';
+        const startArrow = document.getElementById('modalRelationshipStartArrow')?.value || 'none';
+        const endArrow = document.getElementById('modalRelationshipArrowStyle')?.value || 'arrow';
+        const opacity = document.getElementById('modalRelationshipOpacity')?.value || 1;
+        const shadow = document.getElementById('modalRelationshipShadow')?.value || 'none';
+
+        // Create preview elements
+        const previewRect = preview.node().getBoundingClientRect();
+        const fromPoint = { x: 20, y: previewRect.height / 2 };
+        const toPoint = { x: previewRect.width - 20, y: previewRect.height / 2 };
+
+        const style = {
+            connectionType,
+            color,
+            width: parseFloat(width),
+            lineStyle,
+            pattern,
+            startArrowStyle: startArrow,
+            arrowStyle: endArrow,
+            opacity: parseFloat(opacity),
+            shadow
+        };
+
+        // Create preview path
+        const pathData = this.createConnectionPath(fromPoint, toPoint, style);
+        
+        const path = preview.append('path')
+            .attr('d', pathData)
+            .attr('fill', 'none')
+            .attr('stroke', color)
+            .attr('stroke-width', width)
+            .attr('opacity', opacity);
+
+        // Apply line style
+        this.applyLineStyle(path, style);
+
+        // Apply visual effects
+        this.applyVisualEffects(path, style);
+
+        // Add arrows if specified
+        if (startArrow !== 'none') {
+            path.attr('marker-start', `url(#${startArrow}-start)`);
+        }
+        if (endArrow !== 'none') {
+            path.attr('marker-end', `url(#${endArrow})`);
+        }
+
+        // Add pattern if specified
+        if (pattern !== 'none') {
+            this.addPatternOverlay(preview, pathData, style);
+        }
+
+        // Add sample labels
+        const midPoint = { x: previewRect.width / 2, y: previewRect.height / 2 };
+        
+        preview.append('text')
+            .attr('x', midPoint.x)
+            .attr('y', midPoint.y - 5)
+            .attr('text-anchor', 'middle')
+            .attr('fill', color)
+            .style('font-size', '10px')
+            .style('font-weight', 'bold')
+            .text('Sample Connection');
+
+        preview.append('text')
+            .attr('x', midPoint.x)
+            .attr('y', midPoint.y + 12)
+            .attr('text-anchor', 'middle')
+            .attr('fill', '#666')
+            .style('font-size', '8px')
+            .style('font-style', 'italic')
+            .text('[Technology]');
+    }
+
     updateRelationshipsList() {
         const container = document.getElementById('relationshipList');
-        const noRelationships = document.getElementById('noRelationships');
+        if (!container) return;
+        
+        // Clear existing content first
+        container.innerHTML = '';
         
         if (this.relationships.size === 0) {
-            noRelationships.style.display = 'block';
             container.innerHTML = '<div class="text-muted small text-center py-2" id="noRelationships">No relationships defined</div>';
             return;
         }
-
-        noRelationships.style.display = 'none';
-        container.innerHTML = '';
 
         this.relationships.forEach((relationship, id) => {
             const sourceElement = this.elements.get(relationship.sourceId);
             const targetElement = this.elements.get(relationship.targetId);
             
-            if (!sourceElement || !targetElement) return;
+            if (!sourceElement || !targetElement) {
+                console.warn(`Relationship ${id} references missing elements: ${relationship.sourceId} or ${relationship.targetId}`);
+                return;
+            }
 
             const item = document.createElement('div');
             item.className = 'list-group-item list-group-item-action py-2';
@@ -1244,24 +1500,31 @@ class C4DiagramEditor {
                 </div>
             `;
 
-            // Add event listeners
+            // Add event listeners with safety checks
             item.addEventListener('click', (e) => {
                 if (!e.target.closest('.btn-group')) {
                     this.selectRelationship(id);
                 }
             });
 
-            item.querySelector('.edit-relationship').addEventListener('click', (e) => {
-                e.stopPropagation();
-                this.showRelationshipModal(id);
-            });
+            const editBtn = item.querySelector('.edit-relationship');
+            const deleteBtn = item.querySelector('.delete-relationship');
+            
+            if (editBtn) {
+                editBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.showRelationshipModal(id);
+                });
+            }
 
-            item.querySelector('.delete-relationship').addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (confirm('Are you sure you want to delete this relationship?')) {
-                    this.deleteRelationship(id);
-                }
-            });
+            if (deleteBtn) {
+                deleteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (confirm('Are you sure you want to delete this relationship?')) {
+                        this.deleteRelationship(id);
+                    }
+                });
+            }
 
             container.appendChild(item);
         });
@@ -1295,105 +1558,198 @@ class C4DiagramEditor {
         }
     }
 
-    // Enhanced renderRelationship method with improved styling
+    // Enhanced renderRelationship method with Draw.io-style connection types
     renderRelationship(relationship) {
         const fromElement = this.elements.get(relationship.sourceId);
         const toElement = this.elements.get(relationship.targetId);
 
         if (!fromElement || !toElement) return;
 
-        const fromCenter = {
-            x: fromElement.x + fromElement.width / 2,
-            y: fromElement.y + fromElement.height / 2
-        };
-
-        const toCenter = {
-            x: toElement.x + toElement.width / 2,
-            y: toElement.y + toElement.height / 2
-        };
-
-        // Calculate connection points on element edges
-        const fromPoint = this.getConnectionPoint(fromElement, toCenter);
-        const toPoint = this.getConnectionPoint(toElement, fromCenter);
+        // Calculate connection points based on anchor settings
+        const connectionPoints = this.calculateConnectionPoints(fromElement, toElement, relationship.style);
+        const fromPoint = connectionPoints.from;
+        const toPoint = connectionPoints.to;
 
         const group = this.relationshipsGroup
             .append('g')
             .attr('class', 'c4-relationship')
             .attr('data-id', relationship.id);
 
-        // Create path for the relationship
+        // Create path based on connection type
+        const pathData = this.createConnectionPath(fromPoint, toPoint, relationship.style);
+        
+        // Create the main relationship path
         const path = group.append('path')
-            .attr('d', this.createRelationshipPath(fromPoint, toPoint))
+            .attr('d', pathData)
             .attr('fill', 'none')
             .attr('stroke', relationship.style?.color || '#6c757d')
             .attr('stroke-width', relationship.style?.width || 2)
-            .attr('marker-end', `url(#${relationship.style?.arrowStyle || 'arrow'})`)
+            .attr('opacity', relationship.style?.opacity || 1.0)
             .attr('cursor', 'pointer');
 
-        // Apply line style
-        if (relationship.style?.lineStyle === 'dashed') {
-            path.attr('stroke-dasharray', '5,5');
-        } else if (relationship.style?.lineStyle === 'dotted') {
-            path.attr('stroke-dasharray', '2,2');
+        // Apply line styles
+        this.applyLineStyle(path, relationship.style);
+
+        // Apply visual effects
+        this.applyVisualEffects(path, relationship.style);
+
+        // Add arrows
+        this.addArrowMarkers(path, relationship.style);
+
+        // Add pattern overlay
+        if (relationship.style?.pattern && relationship.style.pattern !== 'none') {
+            this.addPatternOverlay(group, pathData, relationship.style);
         }
 
         // Add description label if exists
         if (relationship.description) {
-            const midX = (fromPoint.x + toPoint.x) / 2;
-            const midY = (fromPoint.y + toPoint.y) / 2;
-
-            const label = group.append('text')
-                .attr('class', 'c4-relationship-label')
-                .attr('x', midX)
-                .attr('y', midY - 5)
-                .attr('text-anchor', 'middle')
-                .attr('fill', relationship.style?.color || '#6c757d')
-                .style('font-size', '12px')
-                .style('font-weight', 'bold')
-                .text(relationship.description);
-
-            // Add background for better readability
-            const bbox = label.node().getBBox();
-            group.insert('rect', '.c4-relationship-label')
-                .attr('x', bbox.x - 4)
-                .attr('y', bbox.y - 2)
-                .attr('width', bbox.width + 8)
-                .attr('height', bbox.height + 4)
-                .attr('fill', 'white')
-                .attr('fill-opacity', 0.8)
-                .attr('rx', 3);
+            this.addRelationshipLabel(group, pathData, relationship.description, relationship.style);
         }
 
         // Add technology label if exists
         if (relationship.technology) {
-            const midX = (fromPoint.x + toPoint.x) / 2;
-            const midY = (fromPoint.y + toPoint.y) / 2;
-
-            group.append('text')
-                .attr('class', 'c4-relationship-tech')
-                .attr('x', midX)
-                .attr('y', midY + 15)
-                .attr('text-anchor', 'middle')
-                .attr('fill', '#666')
-                .style('font-size', '10px')
-                .style('font-style', 'italic')
-                .text(`[${relationship.technology}]`);
+            this.addTechnologyLabel(group, pathData, relationship.technology, relationship.style);
         }
 
         // Setup interactions
-        group.on('click', (event) => {
-            event.stopPropagation();
-            this.selectRelationship(relationship.id);
-        });
-
-        group.on('contextmenu', (event) => {
-            event.preventDefault();
-            this.showRelationshipContextMenu(event, relationship.id);
-        });
+        this.setupRelationshipInteractions(group, relationship);
     }
 
-    createRelationshipPath(from, to) {
-        // Create a curved path for better visual appeal
+    // Calculate optimal connection points based on anchor settings
+    calculateConnectionPoints(fromElement, toElement, style) {
+        const sourceAnchor = style?.connectionPoints?.sourceAnchor || 'auto';
+        const targetAnchor = style?.connectionPoints?.targetAnchor || 'auto';
+
+        const fromRect = {
+            x: fromElement.x,
+            y: fromElement.y,
+            width: fromElement.width,
+            height: fromElement.height
+        };
+
+        const toRect = {
+            x: toElement.x,
+            y: toElement.y,
+            width: toElement.width,
+            height: toElement.height
+        };
+
+        let fromPoint, toPoint;
+
+        if (sourceAnchor === 'auto') {
+            fromPoint = this.getOptimalConnectionPoint(fromRect, toRect);
+        } else {
+            fromPoint = this.getAnchorPoint(fromRect, sourceAnchor);
+        }
+
+        if (targetAnchor === 'auto') {
+            toPoint = this.getOptimalConnectionPoint(toRect, fromRect);
+        } else {
+            toPoint = this.getAnchorPoint(toRect, targetAnchor);
+        }
+
+        // Apply offsets if specified
+        if (style?.connectionPoints?.sourceOffset) {
+            fromPoint.x += style.connectionPoints.sourceOffset.x || 0;
+            fromPoint.y += style.connectionPoints.sourceOffset.y || 0;
+        }
+
+        if (style?.connectionPoints?.targetOffset) {
+            toPoint.x += style.connectionPoints.targetOffset.x || 0;
+            toPoint.y += style.connectionPoints.targetOffset.y || 0;
+        }
+
+        return { from: fromPoint, to: toPoint };
+    }
+
+    // Get connection point for specific anchor
+    getAnchorPoint(rect, anchor) {
+        switch (anchor) {
+            case 'top':
+                return { x: rect.x + rect.width / 2, y: rect.y };
+            case 'right':
+                return { x: rect.x + rect.width, y: rect.y + rect.height / 2 };
+            case 'bottom':
+                return { x: rect.x + rect.width / 2, y: rect.y + rect.height };
+            case 'left':
+                return { x: rect.x, y: rect.y + rect.height / 2 };
+            case 'center':
+                return { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 };
+            default:
+                return { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 };
+        }
+    }
+
+    // Get optimal connection point (closest edge point to target)
+    getOptimalConnectionPoint(fromRect, toRect) {
+        const fromCenter = {
+            x: fromRect.x + fromRect.width / 2,
+            y: fromRect.y + fromRect.height / 2
+        };
+
+        const toCenter = {
+            x: toRect.x + toRect.width / 2,
+            y: toRect.y + toRect.height / 2
+        };
+
+        // Calculate direction vector
+        const dx = toCenter.x - fromCenter.x;
+        const dy = toCenter.y - fromCenter.y;
+
+        // Determine which side of the rectangle to use
+        const absRatio = Math.abs(dy / dx);
+        const heightRatio = fromRect.height / fromRect.width;
+
+        let connectionPoint;
+
+        if (absRatio > heightRatio) {
+            // Connect from top or bottom
+            if (dy > 0) {
+                connectionPoint = { x: fromCenter.x, y: fromRect.y + fromRect.height };
+            } else {
+                connectionPoint = { x: fromCenter.x, y: fromRect.y };
+            }
+        } else {
+            // Connect from left or right
+            if (dx > 0) {
+                connectionPoint = { x: fromRect.x + fromRect.width, y: fromCenter.y };
+            } else {
+                connectionPoint = { x: fromRect.x, y: fromCenter.y };
+            }
+        }
+
+        return connectionPoint;
+    }
+
+    // Create connection path based on connection type
+    createConnectionPath(fromPoint, toPoint, style) {
+        const connectionType = style?.connectionType || 'curved';
+
+        switch (connectionType) {
+            case 'straight':
+                return this.createStraightPath(fromPoint, toPoint);
+            case 'curved':
+                return this.createCurvedPath(fromPoint, toPoint);
+            case 'orthogonal':
+                return this.createOrthogonalPath(fromPoint, toPoint);
+            case 'bezier':
+                return this.createBezierPath(fromPoint, toPoint, style?.controlPoints);
+            case 'stepped':
+                return this.createSteppedPath(fromPoint, toPoint);
+            case 'arc':
+                return this.createArcPath(fromPoint, toPoint);
+            default:
+                return this.createCurvedPath(fromPoint, toPoint);
+        }
+    }
+
+    // Straight line connection
+    createStraightPath(from, to) {
+        return `M ${from.x} ${from.y} L ${to.x} ${to.y}`;
+    }
+
+    // Curved connection (default)
+    createCurvedPath(from, to) {
         const dx = to.x - from.x;
         const dy = to.y - from.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
@@ -1410,6 +1766,240 @@ class C4DiagramEditor {
         return `M ${from.x} ${from.y} Q ${midX + perpX} ${midY + perpY} ${to.x} ${to.y}`;
     }
 
+    // Orthogonal connection (right angles)
+    createOrthogonalPath(from, to) {
+        const midX = (from.x + to.x) / 2;
+        const midY = (from.y + to.y) / 2;
+
+        // Determine if we should route horizontally or vertically first
+        const dx = Math.abs(to.x - from.x);
+        const dy = Math.abs(to.y - from.y);
+
+        if (dx > dy) {
+            // Route horizontally first
+            return `M ${from.x} ${from.y} L ${midX} ${from.y} L ${midX} ${to.y} L ${to.x} ${to.y}`;
+        } else {
+            // Route vertically first
+            return `M ${from.x} ${from.y} L ${from.x} ${midY} L ${to.x} ${midY} L ${to.x} ${to.y}`;
+        }
+    }
+
+    // Smooth Bezier curve
+    createBezierPath(from, to, controlPoints = null) {
+        if (controlPoints && controlPoints.length >= 2) {
+            // Use custom control points
+            const cp1 = controlPoints[0].position;
+            const cp2 = controlPoints[1].position;
+            return `M ${from.x} ${from.y} C ${cp1.x} ${cp1.y} ${cp2.x} ${cp2.y} ${to.x} ${to.y}`;
+        } else {
+            // Auto-generate control points
+            const dx = to.x - from.x;
+            const dy = to.y - from.y;
+            
+            const cp1x = from.x + dx * 0.3;
+            const cp1y = from.y;
+            const cp2x = to.x - dx * 0.3;
+            const cp2y = to.y;
+            
+            return `M ${from.x} ${from.y} C ${cp1x} ${cp1y} ${cp2x} ${cp2y} ${to.x} ${to.y}`;
+        }
+    }
+
+    // Stepped connection
+    createSteppedPath(from, to) {
+        const steps = 3;
+        const stepX = (to.x - from.x) / steps;
+        const stepY = (to.y - from.y) / steps;
+        const stepHeight = 20;
+
+        let path = `M ${from.x} ${from.y}`;
+        
+        for (let i = 1; i <= steps; i++) {
+            const x = from.x + stepX * i;
+            const y = from.y + stepY * i;
+            const offsetY = (i % 2 === 1) ? stepHeight : -stepHeight;
+            
+            if (i === 1) {
+                path += ` L ${x} ${from.y + offsetY}`;
+            }
+            path += ` L ${x} ${y + offsetY}`;
+            if (i === steps) {
+                path += ` L ${to.x} ${to.y}`;
+            }
+        }
+        
+        return path;
+    }
+
+    // Arc connection
+    createArcPath(from, to) {
+        const dx = to.x - from.x;
+        const dy = to.y - from.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        // Create an arc with radius proportional to distance
+        const radius = distance * 0.3;
+        const largeArcFlag = radius > distance / 2 ? 1 : 0;
+        const sweepFlag = dy > 0 ? 1 : 0;
+        
+        return `M ${from.x} ${from.y} A ${radius} ${radius} 0 ${largeArcFlag} ${sweepFlag} ${to.x} ${to.y}`;
+    }
+
+    // Apply line styles (dashed, dotted, etc.)
+    applyLineStyle(path, style) {
+        const lineStyle = style?.lineStyle || 'solid';
+        
+        switch (lineStyle) {
+            case 'dashed':
+                path.attr('stroke-dasharray', '8,4');
+                break;
+            case 'dotted':
+                path.attr('stroke-dasharray', '2,2');
+                break;
+            case 'dashdot':
+                path.attr('stroke-dasharray', '8,4,2,4');
+                break;
+            case 'longdash':
+                path.attr('stroke-dasharray', '12,6');
+                break;
+            case 'solid':
+            default:
+                path.attr('stroke-dasharray', 'none');
+                break;
+        }
+    }
+
+    // Apply visual effects (shadow, etc.)
+    applyVisualEffects(path, style) {
+        const shadow = style?.shadow || 'none';
+        
+        switch (shadow) {
+            case 'light':
+                path.style('filter', 'drop-shadow(1px 1px 2px rgba(0,0,0,0.2))');
+                break;
+            case 'medium':
+                path.style('filter', 'drop-shadow(2px 2px 4px rgba(0,0,0,0.3))');
+                break;
+            case 'heavy':
+                path.style('filter', 'drop-shadow(3px 3px 6px rgba(0,0,0,0.4))');
+                break;
+            case 'none':
+            default:
+                path.style('filter', 'none');
+                break;
+        }
+    }
+
+    // Add arrow markers
+    addArrowMarkers(path, style) {
+        const startArrow = style?.startArrowStyle || 'none';
+        const endArrow = style?.arrowStyle || 'arrow';
+
+        if (startArrow !== 'none') {
+            path.attr('marker-start', `url(#${startArrow}-start)`);
+        }
+
+        if (endArrow !== 'none') {
+            path.attr('marker-end', `url(#${endArrow})`);
+        }
+    }
+
+    // Add pattern overlay (wave, zigzag)
+    addPatternOverlay(group, pathData, style) {
+        const pattern = style?.pattern || 'none';
+        
+        if (pattern === 'wave') {
+            // Create wave pattern overlay
+            const wavePath = group.append('path')
+                .attr('d', pathData)
+                .attr('fill', 'none')
+                .attr('stroke', style?.color || '#6c757d')
+                .attr('stroke-width', 1)
+                .attr('stroke-dasharray', 'none')
+                .attr('opacity', 0.5)
+                .style('filter', 'url(#wave-filter)');
+        } else if (pattern === 'zigzag') {
+            // Create zigzag pattern overlay
+            const zigzagPath = group.append('path')
+                .attr('d', pathData)
+                .attr('fill', 'none')
+                .attr('stroke', style?.color || '#6c757d')
+                .attr('stroke-width', 1)
+                .attr('stroke-dasharray', '3,3')
+                .attr('opacity', 0.7);
+        }
+    }
+
+    // Add relationship label with smart positioning
+    addRelationshipLabel(group, pathData, description, style) {
+        const pathElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        pathElement.setAttribute('d', pathData);
+        
+        const pathLength = pathElement.getTotalLength();
+        const midPoint = pathElement.getPointAtLength(pathLength / 2);
+        
+        const label = group.append('text')
+            .attr('class', 'c4-relationship-label')
+            .attr('x', midPoint.x)
+            .attr('y', midPoint.y - 5)
+            .attr('text-anchor', 'middle')
+            .attr('fill', style?.color || '#6c757d')
+            .style('font-size', '12px')
+            .style('font-weight', 'bold')
+            .text(description);
+
+        // Add background for better readability
+        const bbox = label.node().getBBox();
+        group.insert('rect', '.c4-relationship-label')
+            .attr('x', bbox.x - 4)
+            .attr('y', bbox.y - 2)
+            .attr('width', bbox.width + 8)
+            .attr('height', bbox.height + 4)
+            .attr('fill', 'white')
+            .attr('fill-opacity', 0.9)
+            .attr('rx', 3);
+    }
+
+    // Add technology label
+    addTechnologyLabel(group, pathData, technology, style) {
+        const pathElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        pathElement.setAttribute('d', pathData);
+        
+        const pathLength = pathElement.getTotalLength();
+        const midPoint = pathElement.getPointAtLength(pathLength / 2);
+
+        group.append('text')
+            .attr('class', 'c4-relationship-tech')
+            .attr('x', midPoint.x)
+            .attr('y', midPoint.y + 15)
+            .attr('text-anchor', 'middle')
+            .attr('fill', '#666')
+            .style('font-size', '10px')
+            .style('font-style', 'italic')
+            .text(`[${technology}]`);
+    }
+
+    // Setup relationship interactions
+    setupRelationshipInteractions(group, relationship) {
+        group.on('click', (event) => {
+            event.stopPropagation();
+            this.selectRelationship(relationship.id);
+        });
+
+        group.on('contextmenu', (event) => {
+            event.preventDefault();
+            this.showRelationshipContextMenu(event, relationship.id);
+        });
+
+        group.on('mouseover', () => {
+            group.classed('relationship-hover', true);
+        });
+
+        group.on('mouseout', () => {
+            group.classed('relationship-hover', false);
+        });
+    }
+
     showRelationshipContextMenu(event, relationshipId) {
         this.selectedRelationship = relationshipId;
         const menu = document.getElementById('relationshipContextMenu');
@@ -1424,6 +2014,278 @@ class C4DiagramEditor {
                 menu.style.display = 'none';
             }, { once: true });
         }, 100);
+    }
+
+    // Show relationship modal for adding/editing relationships
+    showRelationshipModal(relationshipId = null) {
+        const modal = document.getElementById('relationshipModal');
+        const modalTitle = document.getElementById('relationshipModalTitle');
+        const modalBootstrap = new bootstrap.Modal(modal);
+        
+        this.isEditingRelationship = relationshipId !== null;
+        this.currentRelationshipId = relationshipId;
+        
+        // Update modal title
+        modalTitle.textContent = this.isEditingRelationship ? 'Edit Relationship' : 'Add Relationship';
+        
+        // Populate element dropdowns
+        this.populateElementDropdowns();
+        
+        if (this.isEditingRelationship) {
+            // Load existing relationship data
+            this.loadRelationshipIntoModal(relationshipId);
+        } else {
+            // Reset form for new relationship
+            this.resetRelationshipModal();
+        }
+        
+        modalBootstrap.show();
+        this.updateConnectionPreview();
+    }
+
+    // Populate source and target element dropdowns
+    populateElementDropdowns() {
+        const sourceSelect = document.getElementById('modalSourceElement');
+        const targetSelect = document.getElementById('modalTargetElement');
+        
+        sourceSelect.innerHTML = '<option value="">Select source element...</option>';
+        targetSelect.innerHTML = '<option value="">Select target element...</option>';
+        
+        this.elements.forEach((element, id) => {
+            const option = document.createElement('option');
+            option.value = id;
+            option.textContent = `${element.name} (${element.type})`;
+            
+            sourceSelect.appendChild(option.cloneNode(true));
+            targetSelect.appendChild(option);
+        });
+    }
+
+    // Load relationship data into modal for editing
+    loadRelationshipIntoModal(relationshipId) {
+        const relationship = this.relationships.get(relationshipId);
+        if (!relationship) return;
+        
+        document.getElementById('modalSourceElement').value = relationship.sourceId || '';
+        document.getElementById('modalTargetElement').value = relationship.targetId || '';
+        document.getElementById('modalRelationshipDescription').value = relationship.description || '';
+        document.getElementById('modalRelationshipTechnology').value = relationship.technology || '';
+        
+        // Load style properties
+        const style = relationship.style || {};
+        document.getElementById('modalRelationshipColor').value = style.color || '#6c757d';
+        document.getElementById('modalRelationshipWidth').value = style.width || 2;
+        document.getElementById('modalConnectionType').value = style.connectionType || 'curved';
+        document.getElementById('modalRelationshipLineStyle').value = style.lineStyle || 'solid';
+        document.getElementById('modalRelationshipPattern').value = style.pattern || 'none';
+        document.getElementById('modalRelationshipStartArrow').value = style.startArrowStyle || 'none';
+        document.getElementById('modalRelationshipArrowStyle').value = style.arrowStyle || 'arrow';
+        document.getElementById('modalSourceAnchor').value = style.connectionPoints?.sourceAnchor || 'auto';
+        document.getElementById('modalTargetAnchor').value = style.connectionPoints?.targetAnchor || 'auto';
+        document.getElementById('modalRelationshipOpacity').value = style.opacity || 1.0;
+        document.getElementById('modalRelationshipShadow').value = style.shadow || 'none';
+        
+        // Update value displays
+        document.getElementById('widthValue').textContent = `${style.width || 2}px`;
+        document.getElementById('opacityValue').textContent = `${Math.round((style.opacity || 1.0) * 100)}%`;
+    }
+
+    // Reset relationship modal for new relationship
+    resetRelationshipModal() {
+        document.getElementById('relationshipModalForm').reset();
+        
+        // Set default values
+        document.getElementById('modalRelationshipColor').value = '#6c757d';
+        document.getElementById('modalRelationshipWidth').value = 2;
+        document.getElementById('modalConnectionType').value = 'curved';
+        document.getElementById('modalRelationshipLineStyle').value = 'solid';
+        document.getElementById('modalRelationshipPattern').value = 'none';
+        document.getElementById('modalRelationshipStartArrow').value = 'none';
+        document.getElementById('modalRelationshipArrowStyle').value = 'arrow';
+        document.getElementById('modalSourceAnchor').value = 'auto';
+        document.getElementById('modalTargetAnchor').value = 'auto';
+        document.getElementById('modalRelationshipOpacity').value = 1.0;
+        document.getElementById('modalRelationshipShadow').value = 'none';
+        
+        // Update value displays
+        document.getElementById('widthValue').textContent = '2px';
+        document.getElementById('opacityValue').textContent = '100%';
+    }
+
+    // Save relationship from modal
+    saveRelationshipFromModal() {
+        const sourceId = document.getElementById('modalSourceElement').value;
+        const targetId = document.getElementById('modalTargetElement').value;
+        const description = document.getElementById('modalRelationshipDescription').value;
+        const technology = document.getElementById('modalRelationshipTechnology').value;
+        
+        if (!sourceId || !targetId) {
+            alert('Please select both source and target elements.');
+            return;
+        }
+        
+        if (!description) {
+            alert('Please provide a description for the relationship.');
+            return;
+        }
+        
+        const relationshipData = {
+            id: this.currentRelationshipId || this.generateId(),
+            sourceId: sourceId,
+            targetId: targetId,
+            description: description,
+            technology: technology || null,
+            style: {
+                color: document.getElementById('modalRelationshipColor').value,
+                width: parseFloat(document.getElementById('modalRelationshipWidth').value),
+                connectionType: document.getElementById('modalConnectionType').value,
+                lineStyle: document.getElementById('modalRelationshipLineStyle').value,
+                pattern: document.getElementById('modalRelationshipPattern').value,
+                startArrowStyle: document.getElementById('modalRelationshipStartArrow').value,
+                arrowStyle: document.getElementById('modalRelationshipArrowStyle').value,
+                opacity: parseFloat(document.getElementById('modalRelationshipOpacity').value),
+                shadow: document.getElementById('modalRelationshipShadow').value,
+                connectionPoints: {
+                    sourceAnchor: document.getElementById('modalSourceAnchor').value,
+                    targetAnchor: document.getElementById('modalTargetAnchor').value
+                }
+            }
+        };
+        
+        if (this.isEditingRelationship) {
+            this.updateRelationship(relationshipData);
+        } else {
+            this.addRelationship(relationshipData);
+        }
+        
+        // Close modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('relationshipModal'));
+        modal.hide();
+    }
+
+    // Toggle connection mode
+    toggleConnectionMode() {
+        this.connectionMode = !this.connectionMode;
+        const btn = document.getElementById('connectionModeBtn');
+        
+        if (this.connectionMode) {
+            btn.classList.add('btn-primary');
+            btn.classList.remove('btn-outline-secondary');
+            this.showConnectionModeInstructions();
+        } else {
+            btn.classList.remove('btn-primary');
+            btn.classList.add('btn-outline-secondary');
+            this.connectionStart = null;
+        }
+    }
+
+    // Show connection mode instructions
+    showConnectionModeInstructions() {
+        const modal = new bootstrap.Modal(document.getElementById('connectionModeModal'));
+        modal.show();
+    }
+
+    // Exit connection mode
+    exitConnectionMode() {
+        this.connectionMode = false;
+        this.connectionStart = null;
+        
+        const btn = document.getElementById('connectionModeBtn');
+        btn.classList.remove('btn-primary');
+        btn.classList.add('btn-outline-secondary');
+        
+        const modal = bootstrap.Modal.getInstance(document.getElementById('connectionModeModal'));
+        if (modal) modal.hide();
+    }
+
+    // Update connection preview in modal
+    updateConnectionPreview() {
+        const previewSvg = d3.select('#connectionPreview');
+        previewSvg.selectAll('*').remove();
+        
+        // Create sample connection for preview
+        const fromPoint = { x: 20, y: 50 };
+        const toPoint = { x: 280, y: 50 };
+        
+        const style = {
+            connectionType: document.getElementById('modalConnectionType').value,
+            color: document.getElementById('modalRelationshipColor').value,
+            width: parseFloat(document.getElementById('modalRelationshipWidth').value),
+            lineStyle: document.getElementById('modalRelationshipLineStyle').value,
+            pattern: document.getElementById('modalRelationshipPattern').value,
+            startArrowStyle: document.getElementById('modalRelationshipStartArrow').value,
+            arrowStyle: document.getElementById('modalRelationshipArrowStyle').value,
+            opacity: parseFloat(document.getElementById('modalRelationshipOpacity').value),
+            shadow: document.getElementById('modalRelationshipShadow').value
+        };
+        
+        // Create defs for markers in preview
+        const defs = previewSvg.append('defs');
+        this.createArrowMarker(defs, 'preview-arrow', 'M0,-5L10,0L0,5', style.color);
+        this.createArrowMarker(defs, 'preview-arrow-start', 'M10,-5L0,0L10,5', style.color);
+        
+        // Create connection path
+        const pathData = this.createConnectionPath(fromPoint, toPoint, style);
+        const path = previewSvg.append('path')
+            .attr('d', pathData)
+            .attr('fill', 'none')
+            .attr('stroke', style.color)
+            .attr('stroke-width', style.width)
+            .attr('opacity', style.opacity);
+        
+        // Apply line style
+        this.applyLineStyle(path, style);
+        
+        // Apply visual effects
+        this.applyVisualEffects(path, style);
+        
+        // Add arrows
+        if (style.startArrowStyle !== 'none') {
+            path.attr('marker-start', 'url(#preview-arrow-start)');
+        }
+        if (style.arrowStyle !== 'none') {
+            path.attr('marker-end', 'url(#preview-arrow)');
+        }
+    }
+
+    // Context menu handlers
+    editRelationshipFromContext() {
+        if (this.selectedRelationship) {
+            this.showRelationshipModal(this.selectedRelationship);
+        }
+    }
+
+    duplicateRelationshipFromContext() {
+        if (this.selectedRelationship) {
+            const original = this.relationships.get(this.selectedRelationship);
+            if (original) {
+                const duplicate = {
+                    ...original,
+                    id: this.generateId(),
+                    description: `${original.description} (Copy)`
+                };
+                this.addRelationship(duplicate);
+            }
+        }
+    }
+
+    deleteRelationshipFromContext() {
+        if (this.selectedRelationship) {
+            if (confirm('Are you sure you want to delete this relationship?')) {
+                this.deleteRelationship(this.selectedRelationship);
+            }
+        }
+    }
+
+    // Handle keyboard shortcuts
+    handleKeyDown(event) {
+        if (event.key === 'Escape') {
+            if (this.connectionMode) {
+                this.exitConnectionMode();
+            }
+        } else if (event.key === 'Delete' && this.selectedRelationship) {
+            this.deleteSelectedRelationship();
+        }
     }
 }
 

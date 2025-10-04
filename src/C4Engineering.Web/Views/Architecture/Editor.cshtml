@@ -220,8 +220,23 @@
                                 <option value="depends">Depends on</option>
                             </select>
                         </div>
+                        
+                        <!-- Connection Type -->
                         <div class="mb-3">
-                            <label class="form-label">Style</label>
+                            <label for="relationshipConnectionType" class="form-label">Connection</label>
+                            <select class="form-select form-select-sm" id="relationshipConnectionType">
+                                <option value="curved">Curved</option>
+                                <option value="straight">Straight</option>
+                                <option value="orthogonal">Orthogonal</option>
+                                <option value="bezier">Bezier</option>
+                                <option value="stepped">Stepped</option>
+                                <option value="arc">Arc</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Visual Style -->
+                        <div class="mb-3">
+                            <label class="form-label">Visual Style</label>
                             <div class="row">
                                 <div class="col-6">
                                     <label for="relationshipColor" class="form-label small">Color</label>
@@ -229,18 +244,81 @@
                                 </div>
                                 <div class="col-6">
                                     <label for="relationshipWidth" class="form-label small">Width</label>
-                                    <input type="range" class="form-range" id="relationshipWidth" min="1" max="5" value="2">
+                                    <input type="range" class="form-range" id="relationshipWidth" min="1" max="8" value="2">
                                 </div>
                             </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="relationshipLineStyle" class="form-label">Line Style</label>
-                            <select class="form-select form-select-sm" id="relationshipLineStyle">
-                                <option value="solid">Solid</option>
-                                <option value="dashed">Dashed</option>
-                                <option value="dotted">Dotted</option>
-                            </select>
+                        
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <label for="relationshipLineStyle" class="form-label small">Line Style</label>
+                                <select class="form-select form-select-sm" id="relationshipLineStyle">
+                                    <option value="solid">Solid</option>
+                                    <option value="dashed">Dashed</option>
+                                    <option value="dotted">Dotted</option>
+                                    <option value="dashdot">Dash-Dot</option>
+                                    <option value="longdash">Long Dash</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label for="relationshipPattern" class="form-label small">Pattern</label>
+                                <select class="form-select form-select-sm" id="relationshipPattern">
+                                    <option value="none">None</option>
+                                    <option value="wave">Wave</option>
+                                    <option value="zigzag">Zigzag</option>
+                                </select>
+                            </div>
                         </div>
+
+                        <!-- Arrows -->
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <label for="relationshipStartArrow" class="form-label small">Start Arrow</label>
+                                <select class="form-select form-select-sm" id="relationshipStartArrow">
+                                    <option value="none">None</option>
+                                    <option value="arrow">Arrow</option>
+                                    <option value="diamond">Diamond</option>
+                                    <option value="circle">Circle</option>
+                                    <option value="square">Square</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label for="relationshipEndArrow" class="form-label small">End Arrow</label>
+                                <select class="form-select form-select-sm" id="relationshipEndArrow">
+                                    <option value="arrow">Arrow</option>
+                                    <option value="diamond">Diamond</option>
+                                    <option value="circle">Circle</option>
+                                    <option value="square">Square</option>
+                                    <option value="double">Double</option>
+                                    <option value="none">None</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Connection Points -->
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <label for="relationshipSourceAnchor" class="form-label small">Source</label>
+                                <select class="form-select form-select-sm" id="relationshipSourceAnchor">
+                                    <option value="auto">Auto</option>
+                                    <option value="top">Top</option>
+                                    <option value="right">Right</option>
+                                    <option value="bottom">Bottom</option>
+                                    <option value="left">Left</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label for="relationshipTargetAnchor" class="form-label small">Target</label>
+                                <select class="form-select form-select-sm" id="relationshipTargetAnchor">
+                                    <option value="auto">Auto</option>
+                                    <option value="top">Top</option>
+                                    <option value="right">Right</option>
+                                    <option value="bottom">Bottom</option>
+                                    <option value="left">Left</option>
+                                </select>
+                            </div>
+                        </div>
+
                         <button type="button" class="btn btn-danger btn-sm w-100" id="deleteRelationship">
                             <i class="bi bi-trash"></i> Delete Relationship
                         </button>
@@ -389,7 +467,8 @@
                             </h2>
                             <div id="advancedSettings" class="accordion-collapse collapse" data-bs-parent="#relationshipAdvanced">
                                 <div class="accordion-body">
-                                    <div class="row">
+                                    <!-- Visual Style Section -->
+                                    <div class="row mb-3">
                                         <div class="col-6">
                                             <div class="mb-3">
                                                 <label for="modalRelationshipColor" class="form-label">Color</label>
@@ -399,27 +478,147 @@
                                         <div class="col-6">
                                             <div class="mb-3">
                                                 <label for="modalRelationshipWidth" class="form-label">Width</label>
-                                                <input type="range" class="form-range" id="modalRelationshipWidth" min="1" max="5" value="2">
+                                                <input type="range" class="form-range" id="modalRelationshipWidth" min="1" max="8" value="2">
                                                 <div class="text-center"><small id="widthValue">2px</small></div>
                                             </div>
                                         </div>
                                     </div>
+
+                                    <!-- Connection Type Section -->
                                     <div class="mb-3">
-                                        <label for="modalRelationshipLineStyle" class="form-label">Line Style</label>
-                                        <select class="form-select" id="modalRelationshipLineStyle">
-                                            <option value="solid">Solid</option>
-                                            <option value="dashed">Dashed</option>
-                                            <option value="dotted">Dotted</option>
+                                        <label for="modalConnectionType" class="form-label">Connection Type</label>
+                                        <select class="form-select" id="modalConnectionType">
+                                            <option value="curved">Curved (Default)</option>
+                                            <option value="straight">Straight Line</option>
+                                            <option value="orthogonal">Orthogonal (Right Angles)</option>
+                                            <option value="bezier">Smooth Bezier</option>
+                                            <option value="stepped">Stepped Lines</option>
+                                            <option value="arc">Arc Connection</option>
                                         </select>
+                                        <div class="form-text">Choose how the connection line is routed between elements</div>
                                     </div>
+
+                                    <!-- Line Style Section -->
+                                    <div class="row mb-3">
+                                        <div class="col-6">
+                                            <div class="mb-3">
+                                                <label for="modalRelationshipLineStyle" class="form-label">Line Style</label>
+                                                <select class="form-select" id="modalRelationshipLineStyle">
+                                                    <option value="solid">Solid</option>
+                                                    <option value="dashed">Dashed</option>
+                                                    <option value="dotted">Dotted</option>
+                                                    <option value="dashdot">Dash-Dot</option>
+                                                    <option value="longdash">Long Dash</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="mb-3">
+                                                <label for="modalRelationshipPattern" class="form-label">Pattern</label>
+                                                <select class="form-select" id="modalRelationshipPattern">
+                                                    <option value="none">None</option>
+                                                    <option value="wave">Wave</option>
+                                                    <option value="zigzag">Zigzag</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Arrow Styles Section -->
+                                    <div class="row mb-3">
+                                        <div class="col-6">
+                                            <div class="mb-3">
+                                                <label for="modalRelationshipStartArrow" class="form-label">Start Arrow</label>
+                                                <select class="form-select" id="modalRelationshipStartArrow">
+                                                    <option value="none">None</option>
+                                                    <option value="arrow">Arrow</option>
+                                                    <option value="diamond">Diamond</option>
+                                                    <option value="circle">Circle</option>
+                                                    <option value="square">Square</option>
+                                                    <option value="open">Open Arrow</option>
+                                                    <option value="filled">Filled Arrow</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="mb-3">
+                                                <label for="modalRelationshipArrowStyle" class="form-label">End Arrow</label>
+                                                <select class="form-select" id="modalRelationshipArrowStyle">
+                                                    <option value="arrow">Arrow</option>
+                                                    <option value="diamond">Diamond</option>
+                                                    <option value="circle">Circle</option>
+                                                    <option value="square">Square</option>
+                                                    <option value="open">Open Arrow</option>
+                                                    <option value="filled">Filled Arrow</option>
+                                                    <option value="double">Double Arrow</option>
+                                                    <option value="none">None</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Connection Points Section -->
+                                    <div class="row mb-3">
+                                        <div class="col-6">
+                                            <div class="mb-3">
+                                                <label for="modalSourceAnchor" class="form-label">Source Anchor</label>
+                                                <select class="form-select" id="modalSourceAnchor">
+                                                    <option value="auto">Auto</option>
+                                                    <option value="top">Top</option>
+                                                    <option value="right">Right</option>
+                                                    <option value="bottom">Bottom</option>
+                                                    <option value="left">Left</option>
+                                                    <option value="center">Center</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="mb-3">
+                                                <label for="modalTargetAnchor" class="form-label">Target Anchor</label>
+                                                <select class="form-select" id="modalTargetAnchor">
+                                                    <option value="auto">Auto</option>
+                                                    <option value="top">Top</option>
+                                                    <option value="right">Right</option>
+                                                    <option value="bottom">Bottom</option>
+                                                    <option value="left">Left</option>
+                                                    <option value="center">Center</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Visual Effects Section -->
+                                    <div class="row mb-3">
+                                        <div class="col-6">
+                                            <div class="mb-3">
+                                                <label for="modalRelationshipOpacity" class="form-label">Opacity</label>
+                                                <input type="range" class="form-range" id="modalRelationshipOpacity" min="0.1" max="1" step="0.1" value="1">
+                                                <div class="text-center"><small id="opacityValue">100%</small></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="mb-3">
+                                                <label for="modalRelationshipShadow" class="form-label">Shadow</label>
+                                                <select class="form-select" id="modalRelationshipShadow">
+                                                    <option value="none">None</option>
+                                                    <option value="light">Light</option>
+                                                    <option value="medium">Medium</option>
+                                                    <option value="heavy">Heavy</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Preview Section -->
                                     <div class="mb-3">
-                                        <label for="modalRelationshipArrowStyle" class="form-label">Arrow Style</label>
-                                        <select class="form-select" id="modalRelationshipArrowStyle">
-                                            <option value="arrow">Arrow</option>
-                                            <option value="diamond">Diamond</option>
-                                            <option value="circle">Circle</option>
-                                            <option value="none">None</option>
-                                        </select>
+                                        <label class="form-label">Connection Preview</label>
+                                        <div class="border rounded p-3 bg-light" style="height: 100px;">
+                                            <svg id="connectionPreview" width="100%" height="100%">
+                                                <defs></defs>
+                                                <!-- Preview will be rendered here -->
+                                            </svg>
+                                        </div>
+                                        <div class="form-text">Preview of the connection line with current settings</div>
                                     </div>
                                 </div>
                             </div>

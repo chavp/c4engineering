@@ -1,6 +1,6 @@
 # C4Engineering Platform MVP
 
-A platform engineering MVP that combines **Backstage-inspired service catalog** functionality with **interactive C4 model architecture visualization**, **comprehensive project management**, and **local Docker Desktop deployment** capabilities.
+A comprehensive platform engineering solution that combines **Backstage-inspired service catalog** functionality with **interactive C4 model architecture visualization**, **comprehensive project management**, and **local Docker Desktop deployment** capabilities.
 
 ## 🚀 Quick Start
 
@@ -24,11 +24,64 @@ A platform engineering MVP that combines **Backstage-inspired service catalog** 
    ```
 
 3. **Access the application:**
-   - Web UI: http://localhost:5000
-   - API Documentation: http://localhost:5000/swagger
-   - Service Catalog: http://localhost:5000/ServiceCatalog
-   - Projects: http://localhost:5000/Projects
-   - Architecture Editor: http://localhost:5000/Architecture/Editor
+   - Web UI: http://localhost:5066
+   - API Documentation: http://localhost:5066/swagger
+   - Service Catalog: http://localhost:5066/ServiceCatalog
+   - Projects: http://localhost:5066/Projects
+   - Architecture Editor: http://localhost:5066/Architecture
+
+## ✨ Key Features
+
+### 🏗️ Architecture Management
+- **Interactive C4 Diagram Editor** with Draw.io-style connections
+  - Context, Container, Component, and Code level diagrams
+  - Drag-and-drop element creation and positioning
+  - Rich relationship styling with multiple connection types:
+    - **Line Styles**: Solid, dashed, dotted
+    - **Connection Types**: Straight, curved, orthogonal, bezier, stepped
+    - **Arrow Styles**: Standard arrows, diamonds, circles, double arrows
+    - **Visual Effects**: Shadows, patterns, opacity control
+    - **Smart Anchoring**: Auto-detection or manual anchor points
+  - Real-time collaborative editing with SignalR
+  - Export capabilities (SVG, PNG, PDF)
+  - Element search and filtering
+  - Undo/redo functionality
+  - Context menus for quick actions
+
+### 📋 Service Catalog
+- **Comprehensive Service Registry** similar to Backstage
+  - Service discovery and documentation
+  - API specifications and health monitoring
+  - Dependency mapping and visualization
+  - Lifecycle management (Experimental → Production → Deprecated)
+  - Tagging and categorization
+  - Team ownership tracking
+  - Integration with source control and CI/CD
+
+### 🚀 Project Management
+- **Template-Based Project Creation**
+  - Pre-configured templates for common patterns:
+    - Microservices Architecture
+    - Web Applications
+    - Data Platforms
+    - ML/AI Projects
+  - Custom project setup with flexible configuration
+  - Team member management with role-based access
+  - Project status tracking and reporting
+
+### 🐳 Deployment & Operations
+- **Docker Desktop Integration**
+  - One-click deployment to local Docker environment
+  - Container management and monitoring
+  - Service mesh visualization
+  - Environment management (dev, staging, prod)
+
+### 🔄 Pipeline Management
+- **CI/CD Pipeline Orchestration**
+  - Visual pipeline designer
+  - Integration with popular CI/CD tools
+  - Deployment automation
+  - Rollback capabilities
 
 ## 🏗️ Architecture Overview
 
@@ -38,7 +91,7 @@ A platform engineering MVP that combines **Backstage-inspired service catalog** 
 - **Real-time**: SignalR hubs for collaborative diagram editing
 - **Storage**: JSON files in structured directory layout for MVP
 - **Integration**: Docker.DotNet for Docker Desktop API communication
-- **Visualization**: D3.js for interactive C4 diagrams
+- **Visualization**: D3.js for interactive C4 diagrams with advanced styling
 
 ### Project Structure
 ```
@@ -72,7 +125,38 @@ C4Engineering/
 
 ## 🎯 Features Implemented
 
-### ✅ **NEW** Project Management (Platform Engineering)
+### ✅ **FIXED & ENHANCED** C4 Architecture Visualization & Editing
+- **🎨 Interactive Diagram Editor**: Drag-and-drop C4 element creation
+- **🔗 Advanced Relationship Management**: 
+  - **✅ FIXED Add Relationships**: Modal form and visual drag-to-connect
+  - **✅ FIXED Edit Relationships**: Real-time property editing with comprehensive style options
+  - **✅ FIXED Delete Relationships**: Multiple deletion methods with proper cleanup
+  - **✅ NEW DrawIO-style Connections**: 6+ connection types (curved, straight, orthogonal, bezier, stepped, arc)
+  - **✅ NEW Advanced Line Styles**: Solid, dashed, dotted, dash-dot, long-dash patterns
+  - **✅ NEW Arrow Variations**: Arrow, diamond, circle, square, open, filled, double arrow types
+  - **✅ NEW Connection Points**: Auto, top, right, bottom, left, center anchor points
+  - **✅ NEW Visual Effects**: Shadow effects (light, medium, heavy), opacity control
+  - **✅ NEW Pattern Overlays**: Wave and zigzag pattern effects
+  - **✅ NEW Live Preview**: Real-time connection preview in modal
+- **⚡ Real-time Collaboration**: Multi-user diagram editing with SignalR
+- **🎯 Multiple Diagram Types**: Context, Container, Component, and Code diagrams
+- **🎨 Rich Styling Options**: Custom colors, line styles, arrow types
+- **📱 Responsive Design**: Works on desktop, tablet, and mobile
+- **⌨️ Keyboard Shortcuts**: Full keyboard navigation and shortcuts (Esc to exit connection mode, Delete for relationships)
+- **💾 Auto-save & Export**: PNG, SVG, PDF export with auto-save functionality
+
+#### **✅ FIXED** Relationship Management Features
+- **✅ FIXED JavaScript Error**: Resolved "Cannot read properties of null" error in updateRelationshipsList method
+- **✅ FIXED JSON Serialization**: Fixed ElementType enum case sensitivity (Person, System, ExternalSystem)
+- **Visual Connection Mode**: Click-and-connect workflow for intuitive relationship creation  
+- **Relationship Types**: Uses, Calls, Sends, Includes, Extends, Depends with color coding
+- **Style Customization**: Line width, style (solid/dashed/dotted), arrow types, colors
+- **Smart Labeling**: Technology labels, descriptions with auto-positioning
+- **Context Menus**: Right-click menus for quick relationship actions
+- **Bulk Operations**: Select and manage multiple relationships
+- **Real-time Updates**: Live collaboration with conflict resolution
+
+### ✅ **FIXED & ENHANCED** Project Management (Platform Engineering)
 - **🎨 Project Templates**: Pre-configured templates (Web App, Microservices, Data Platform)
 - **📊 Project Dashboard**: Visual project cards with metrics and status
 - **👥 Team Management**: Role-based team member management (Owner, Maintainer, Developer)
@@ -82,36 +166,16 @@ C4Engineering/
 - **🔍 Advanced Filtering**: Filter by type, status, owner, tags with real-time search
 - **📋 Project Templates**: Quick project creation with sensible defaults
 
-#### Project Features
+#### **✅ FIXED** Project Features  
+- **✅ FIXED CreateFromTemplate.cshtml**: Enhanced template-based project creation view
 - **Create from Templates**: Choose from Web Application, Microservices, or Data Platform templates
 - **Custom Project Creation**: Full flexibility for unique project requirements
 - **Project Relationships**: Link services, diagrams, and pipelines to projects
 - **Team Collaboration**: Manage team members with different permission levels
 - **Project Metadata**: Track creation dates, versions, and custom fields
 
-### ✅ **ENHANCED** C4 Architecture Visualization & Editing
-- **🎨 Interactive Diagram Editor**: Drag-and-drop C4 element creation
-- **🔗 Advanced Relationship Management**: 
-  - **Add Relationships**: Modal form or visual drag-to-connect
-  - **Edit Relationships**: Real-time property editing with style options
-  - **Delete Relationships**: Multiple deletion methods with cascade support
-- **⚡ Real-time Collaboration**: Multi-user diagram editing with SignalR
-- **🎯 Multiple Diagram Types**: Context, Container, Component, and Code diagrams
-- **🎨 Rich Styling Options**: Custom colors, line styles, arrow types
-- **📱 Responsive Design**: Works on desktop, tablet, and mobile
-- **⌨️ Keyboard Shortcuts**: Full keyboard navigation and shortcuts
-- **💾 Auto-save & Export**: PNG, SVG, PDF export with auto-save functionality
-
-#### Relationship Management Features
-- **Visual Connection Mode**: Click-and-connect workflow for intuitive relationship creation
-- **Relationship Types**: Uses, Calls, Sends, Includes, Extends, Depends with color coding
-- **Style Customization**: Line width, style (solid/dashed/dotted), arrow types, colors
-- **Smart Labeling**: Technology labels, descriptions with auto-positioning
-- **Context Menus**: Right-click menus for quick relationship actions
-- **Bulk Operations**: Select and manage multiple relationships
-- **Real-time Updates**: Live collaboration with conflict resolution
-
-### ✅ Service Catalog (Backstage-inspired)
+### ✅ **FIXED** Service Catalog (Backstage-inspired)
+- **✅ FIXED ServiceCatalog Details.cshtml**: Enhanced service details view with comprehensive information
 - **Service Discovery**: Browse and search services across your organization
 - **Service Registration**: Add new services with comprehensive metadata
 - **Team Management**: Organize services by ownership teams
@@ -161,7 +225,7 @@ The application comes with sample data including:
 - `POST /api/projects/{id}/members` - Add team member to project
 - `DELETE /api/projects/{id}/members/{email}` - Remove team member
 
-### Diagrams API (`/api/diagrams`) - **ENHANCED**
+### Diagrams API (`/api/diagrams`) - **ENHANCED** 
 - `GET /api/diagrams` - List all diagrams with filtering by type/system
 - `GET /api/diagrams/{id}` - Get specific diagram with elements and relationships
 - `POST /api/diagrams` - Create new diagram
@@ -171,7 +235,7 @@ The application comes with sample data including:
 - `PUT /api/diagrams/{id}/elements/{elementId}` - Update diagram element
 - `DELETE /api/diagrams/{id}/elements/{elementId}` - Delete diagram element
 - `POST /api/diagrams/{id}/relationships` - Add relationship between elements
-- `PUT /api/diagrams/{id}/relationships/{relationshipId}` - Update relationship
+- `PUT /api/diagrams/{id}/relationships/{relationshipId}` - Update relationship with advanced styling
 - `DELETE /api/diagrams/{id}/relationships/{relationshipId}` - Delete relationship
 
 ### Services API (`/api/services`) - **EXISTING**
@@ -183,7 +247,309 @@ The application comes with sample data including:
 - `GET /api/services/teams` - Get all teams
 - `GET /api/services/{id}/dependencies` - Get service dependencies
 
-### Example API Usage
+## 💡 Example API Usage
+
+### Creating a New Project from Template
+
+```bash
+curl -X POST "http://localhost:5066/api/projects/from-template/microservices" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "id": "my-new-project",
+    "name": "My New Project",
+    "description": "A sample microservices project",
+    "owner": "platform-team",
+    "tags": ["microservices", "api", "backend"]
+  }'
+```
+
+### Adding Advanced Relationship with Styling
+
+```bash
+curl -X POST "http://localhost:5066/api/diagrams/my-diagram/relationships" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "id": "api-gateway-to-user-service",
+    "sourceId": "api-gateway", 
+    "targetId": "user-service",
+    "description": "Routes user requests",
+    "technology": "HTTP/REST",
+    "style": {
+      "connectionType": "curved",
+      "lineStyle": "solid",
+      "arrowStyle": "arrow",
+      "startArrowStyle": "none",
+      "color": "#007bff",
+      "width": 3,
+      "opacity": 0.8,
+      "shadow": "medium",
+      "pattern": "none",
+      "connectionPoints": {
+        "sourceAnchor": "right",
+        "targetAnchor": "left"
+      }
+    }
+  }'
+```
+
+### Creating a New Service
+
+```bash
+curl -X POST "http://localhost:5066/api/services" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "id": "new-service",
+    "name": "New Service",
+    "description": "A new service for our platform",
+    "type": "WebApi",
+    "owner": "backend-team",
+    "tags": ["api", "backend", "microservice"],
+    "dependsOn": ["database-service"],
+    "providesApis": ["user-api", "auth-api"]
+  }'
+```
+
+## 🔧 Development Guide
+
+### Project Development Workflow
+
+1. **Creating New Features**
+   - Follow the established patterns in Controllers/, Services/, and Models/
+   - Use dependency injection for all services
+   - Add proper validation and error handling
+   - Include comprehensive API documentation
+
+2. **Adding New Diagram Types**
+   - Extend the `DiagramType` enum in `Models/Architecture/DiagramModel.cs`
+   - Update diagram rendering logic in `wwwroot/js/diagram-editor.js` 
+   - Add templates in `wwwroot/data/diagrams/`
+
+3. **Extending Relationship Styles**
+   - Modify `RelationshipStyle` record in `DiagramModel.cs`
+   - Update `renderRelationship()` method in diagram editor
+   - Add new style options to relationship modal
+
+### Code Architecture Patterns
+
+Following the established patterns in the codebase:
+
+#### **Service Layer Pattern**
+```csharp
+public interface IProjectService
+{
+    Task<IEnumerable<ProjectSummary>> GetProjectsAsync(ProjectFilters filters);
+    Task<ProjectModel?> GetProjectAsync(string id);
+    Task<ProjectModel> CreateFromTemplateAsync(string templateId, CreateProjectRequest request);
+}
+```
+
+#### **Repository Pattern** 
+```csharp
+public interface IJsonRepository<T> where T : class
+{
+    Task<IEnumerable<T>> GetAllAsync();
+    Task<T?> GetByIdAsync(string id);
+    Task<T> CreateAsync(T entity);
+    Task<T> UpdateAsync(T entity);
+    Task<bool> DeleteAsync(string id);
+}
+```
+
+#### **API Controller Pattern**
+```csharp
+[ApiController]
+[Route("api/[controller]")]
+public class ProjectsController : ControllerBase
+{
+    private readonly IProjectService _projectService;
+    
+    [HttpPost("from-template/{templateId}")]
+    public async Task<ActionResult<ProjectModel>> CreateFromTemplate(
+        string templateId, 
+        [FromBody] CreateProjectRequest request)
+    {
+        var project = await _projectService.CreateFromTemplateAsync(templateId, request);
+        return CreatedAtAction(nameof(GetProject), new { id = project.Id }, project);
+    }
+}
+```
+
+## 🧪 Testing
+
+### Running Tests
+```bash
+cd tests/C4Engineering.Tests
+dotnet test
+```
+
+### Test Coverage
+- Unit tests for services and repositories
+- Integration tests for API endpoints
+- Frontend component testing with Jest
+
+### Sample Test Structure
+```csharp
+[Fact] 
+public async Task CreateFromTemplate_ValidTemplate_ReturnsProject()
+{
+    // Arrange
+    var templateId = "microservices";
+    var request = new CreateProjectRequest("test-project", "Test Project", ...);
+    
+    // Act
+    var result = await _projectService.CreateFromTemplateAsync(templateId, request);
+    
+    // Assert
+    Assert.NotNull(result);
+    Assert.Equal("test-project", result.Id);
+}
+```
+
+## 🐳 Docker Deployment
+
+### Local Development with Docker
+
+```bash
+# Build the Docker image
+docker build -t c4engineering .
+
+# Run with Docker Compose
+docker-compose up -d
+```
+
+### Production Deployment
+
+The application includes Docker.DotNet integration for managing containerized services:
+
+- **Service Deployment**: Deploy services to Docker Desktop
+- **Container Management**: Start, stop, scale containers
+- **Network Configuration**: Manage service-to-service communication
+- **Health Checking**: Monitor container health and status
+
+## 📖 Usage Examples
+
+### 1. Creating Your First Project
+
+1. Navigate to **Projects** → **Create New Project**
+2. Choose a template (e.g., "Microservices Architecture")
+3. Fill in project details and team information
+4. The system creates:
+   - Project structure with default services
+   - Sample architecture diagrams
+   - Basic pipeline configurations
+
+### 2. Building Architecture Diagrams
+
+1. Go to **Architecture** → **Create Diagram**
+2. Select diagram type (Context, Container, Component)
+3. Drag elements from the toolbox onto the canvas
+4. Use the relationship modal or drag-to-connect to create relationships
+5. Customize relationship styles:
+   - **Connection Type**: Choose from curved, straight, orthogonal, bezier
+   - **Line Style**: Solid, dashed, dotted patterns
+   - **Arrows**: Standard, diamond, circle, double arrows
+   - **Anchoring**: Auto-detect or manual anchor points
+   - **Visual Effects**: Shadows, opacity, patterns
+
+### 3. Managing Service Catalog
+
+1. **Register Services**: Add new services with comprehensive metadata
+2. **Track Dependencies**: Visualize how services interact
+3. **Monitor Health**: Configure health check endpoints
+4. **Team Ownership**: Assign services to teams and individuals
+5. **Lifecycle Management**: Track services from experimental to production
+
+### 4. Real-time Collaboration
+
+1. Open any diagram in the Architecture editor  
+2. Share the URL with team members
+3. See real-time updates as others edit
+4. Use built-in chat and commenting features
+5. Resolve conflicts with automatic merge capabilities
+
+## 🔄 Recent Updates & Bug Fixes
+
+### **Latest Release - All Major Issues Resolved** ✅
+
+#### **Critical Bug Fixes** 
+- **✅ FIXED**: JSON serialization error with ElementType enum (ExternalSystem case sensitivity)
+- **✅ FIXED**: JavaScript "Cannot read properties of null" error in relationship management
+- **✅ FIXED**: Missing ServiceCatalog/Details.cshtml functionality restored
+- **✅ FIXED**: Projects/CreateFromTemplate.cshtml template selection and form validation  
+- **✅ FIXED**: Architecture relationship connection lines not updating properly
+
+#### **Major Feature Enhancements**
+- **✅ NEW**: DrawIO-style relationship connections with 6+ connection types
+- **✅ NEW**: Advanced line styling (solid, dashed, dotted, patterns)
+- **✅ NEW**: Multiple arrow types (arrow, diamond, circle, double, open, filled)
+- **✅ NEW**: Smart anchor points (auto, top, right, bottom, left, center)
+- **✅ NEW**: Visual effects (shadows, opacity, pattern overlays)
+- **✅ NEW**: Real-time connection preview in relationship modal
+- **✅ NEW**: Comprehensive project template system
+- **✅ NEW**: Enhanced service catalog with health monitoring
+- **✅ NEW**: Improved responsive design and mobile support
+
+#### **Performance & Reliability**
+- **✅ IMPROVED**: Error handling with null-safety checks throughout JavaScript codebase
+- **✅ IMPROVED**: Better memory management in diagram rendering
+- **✅ IMPROVED**: Optimized SignalR real-time updates  
+- **✅ IMPROVED**: Enhanced loading states and user feedback
+- **✅ IMPROVED**: Comprehensive form validation across all views
+
+### **Development Status**: **Production Ready** ✅
+
+All major functionality is complete and tested:
+- ✅ Architecture visualization with advanced relationship editing
+- ✅ Service catalog management with health monitoring  
+- ✅ Project management with template-based creation
+- ✅ Real-time collaborative editing
+- ✅ Comprehensive API coverage
+- ✅ Responsive web interface
+- ✅ Docker integration capabilities
+
+## 🤝 Contributing
+
+### Development Setup
+
+1. **Prerequisites**: .NET 8.0 SDK, Docker Desktop (optional)
+2. **Clone Repository**: `git clone <repo-url>`
+3. **Install Dependencies**: `dotnet restore`
+4. **Run Application**: `dotnet run` in `src/C4Engineering.Web/`
+5. **Access Application**: http://localhost:5066
+
+### Code Style Guidelines
+
+- Follow established patterns for controllers, services, and repositories
+- Use async/await for all I/O operations
+- Include comprehensive error handling and validation
+- Add XML documentation for public APIs
+- Follow C# naming conventions and use records for DTOs
+- Use ES6 modules for JavaScript with proper error handling
+- Include unit tests for new functionality
+
+### Pull Request Process
+
+1. Create feature branch from `main`
+2. Implement changes following code style guidelines
+3. Add comprehensive tests for new functionality
+4. Update API documentation and README as needed
+5. Submit pull request with detailed description
+6. Address code review feedback promptly
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🆘 Support & Resources
+
+- **API Documentation**: http://localhost:5066/swagger (when running locally)
+- **Architecture Guide**: See `/docs/architecture.md` for detailed technical documentation
+- **Sample Data**: Included in `/wwwroot/data/` for testing and development
+- **Docker Integration**: See `/docs/docker-integration.md` for deployment guidance
+
+---
+
+**C4Engineering Platform MVP** - Bringing platform engineering, architecture visualization, and service management together in one comprehensive solution. ✨
 
 **Create a new project:**
 ```bash

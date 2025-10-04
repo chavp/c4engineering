@@ -589,30 +589,316 @@
     animation: dash 1s linear infinite;
 }
 
-/* Relationship Type Indicators */
-.relationship-uses { stroke: #28a745; }
-.relationship-calls { stroke: #007bff; }
-.relationship-sends { stroke: #17a2b8; }
-.relationship-includes { stroke: #6610f2; }
-.relationship-extends { stroke: #e83e8c; }
-.relationship-depends { stroke: #fd7e14; }
+/* === ADVANCED CONNECTION LINE STYLES (Draw.io-inspired) === */
 
-/* No Relationships State */
-#noRelationships {
-    font-style: italic;
-    color: #6c757d;
+/* Connection Type Styles */
+.connection-straight {
+    stroke-linecap: round;
 }
 
-/* Responsive Relationship Management */
+.connection-curved {
+    stroke-linecap: round;
+}
+
+.connection-orthogonal {
+    stroke-linecap: square;
+    stroke-linejoin: round;
+}
+
+.connection-bezier {
+    stroke-linecap: round;
+}
+
+.connection-stepped {
+    stroke-linecap: square;
+    stroke-linejoin: round;
+}
+
+.connection-arc {
+    stroke-linecap: round;
+}
+
+/* Advanced Line Styles */
+.line-solid {
+    stroke-dasharray: none;
+}
+
+.line-dashed {
+    stroke-dasharray: 8,4;
+}
+
+.line-dotted {
+    stroke-dasharray: 2,2;
+}
+
+.line-dashdot {
+    stroke-dasharray: 8,4,2,4;
+}
+
+.line-longdash {
+    stroke-dasharray: 12,6;
+}
+
+/* Pattern Overlays */
+.pattern-wave {
+    filter: url(#wave-filter);
+}
+
+.pattern-zigzag {
+    stroke-dasharray: 3,3;
+    opacity: 0.7;
+}
+
+/* Advanced Arrow Styles */
+.arrow-filled {
+    marker-end: url(#filled);
+}
+
+.arrow-open {
+    marker-end: url(#open);
+}
+
+.arrow-double {
+    marker-end: url(#double);
+}
+
+.arrow-square {
+    marker-end: url(#square);
+}
+
+/* Bidirectional Arrows */
+.arrow-bidirectional {
+    marker-start: url(#arrow-start);
+    marker-end: url(#arrow);
+}
+
+.arrow-start-filled {
+    marker-start: url(#filled-start);
+}
+
+.arrow-start-open {
+    marker-start: url(#open-start);
+}
+
+.arrow-start-diamond {
+    marker-start: url(#diamond-start);
+}
+
+.arrow-start-circle {
+    marker-start: url(#circle-start);
+}
+
+.arrow-start-square {
+    marker-start: url(#square-start);
+}
+
+/* Shadow Effects */
+.shadow-light {
+    filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.2));
+}
+
+.shadow-medium {
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+}
+
+.shadow-heavy {
+    filter: drop-shadow(3px 3px 6px rgba(0,0,0,0.4));
+}
+
+/* Connection Preview Styles */
+#connectionPreview {
+    background: linear-gradient(45deg, #f8f9fa 25%, transparent 25%), 
+                linear-gradient(-45deg, #f8f9fa 25%, transparent 25%), 
+                linear-gradient(45deg, transparent 75%, #f8f9fa 75%), 
+                linear-gradient(-45deg, transparent 75%, #f8f9fa 75%);
+    background-size: 10px 10px;
+    background-position: 0 0, 0 5px, 5px -5px, -5px 0px;
+}
+
+.connection-preview-container {
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    background: #fff;
+    position: relative;
+    overflow: hidden;
+}
+
+.connection-preview-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, #f8f9fa 25%, transparent 25%), 
+                linear-gradient(-45deg, #f8f9fa 25%, transparent 25%), 
+                linear-gradient(45deg, transparent 75%, #f8f9fa 75%), 
+                linear-gradient(-45deg, transparent 75%, #f8f9fa 75%);
+    background-size: 10px 10px;
+    background-position: 0 0, 0 5px, 5px -5px, -5px 0px;
+    opacity: 0.1;
+    pointer-events: none;
+}
+
+/* Enhanced Relationship Hover Effects */
+.c4-relationship:hover {
+    stroke-width: 3 !important;
+    filter: brightness(1.1) drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    cursor: pointer;
+}
+
+.c4-relationship.selected {
+    stroke: #007bff !important;
+    stroke-width: 3 !important;
+    stroke-dasharray: 8,4 !important;
+    animation: dash 2s linear infinite;
+    filter: drop-shadow(0 2px 8px rgba(0,123,255,0.4));
+}
+
+.relationship-hover {
+    stroke-width: 3 !important;
+    filter: brightness(1.2) drop-shadow(0 2px 6px rgba(0,0,0,0.3));
+}
+
+/* Connection Mode Enhancements */
+.connection-mode-active * {
+    cursor: crosshair !important;
+}
+
+.connection-source {
+    stroke: #28a745 !important;
+    stroke-width: 4 !important;
+    stroke-dasharray: 6,3;
+    animation: connection-pulse 1.5s ease-in-out infinite;
+    filter: drop-shadow(0 0 8px rgba(40,167,69,0.6));
+}
+
+@keyframes connection-pulse {
+    0%, 100% { 
+        stroke-width: 4; 
+        opacity: 1; 
+    }
+    50% { 
+        stroke-width: 6; 
+        opacity: 0.8; 
+    }
+}
+
+/* Advanced Relationship Labels */
+.c4-relationship-label {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    text-anchor: middle;
+    pointer-events: none;
+    user-select: none;
+    text-shadow: 0 1px 2px rgba(255,255,255,0.8);
+}
+
+.c4-relationship-tech {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 10px;
+    font-style: italic;
+    text-anchor: middle;
+    pointer-events: none;
+    user-select: none;
+    opacity: 0.8;
+    text-shadow: 0 1px 1px rgba(255,255,255,0.8);
+}
+
+/* Connection Point Styles */
+.connection-point {
+    fill: #007bff;
+    stroke: white;
+    stroke-width: 2;
+    r: 4;
+    cursor: crosshair;
+    opacity: 0;
+    transition: all 0.2s ease;
+}
+
+.c4-element:hover .connection-point,
+.connection-mode-active .connection-point {
+    opacity: 1;
+    r: 6;
+}
+
+.connection-point:hover {
+    fill: #0056b3;
+    r: 8;
+    stroke-width: 3;
+}
+
+.connection-point.active {
+    fill: #28a745;
+    opacity: 1;
+    r: 8;
+    stroke: #fff;
+    stroke-width: 3;
+    animation: connection-point-pulse 1s ease-in-out infinite;
+}
+
+@keyframes connection-point-pulse {
+    0%, 100% { 
+        transform: scale(1); 
+    }
+    50% { 
+        transform: scale(1.2); 
+    }
+}
+
+/* Anchor Point Indicators */
+.anchor-auto::after { content: "⚹"; }
+.anchor-top::after { content: "⬆"; }
+.anchor-right::after { content: "➡"; }
+.anchor-bottom::after { content: "⬇"; }
+.anchor-left::after { content: "⬅"; }
+.anchor-center::after { content: "⊙"; }
+
+/* Connection Type Icons */
+.connection-type-icon {
+    display: inline-block;
+    width: 20px;
+    height: 12px;
+    vertical-align: middle;
+    margin-right: 8px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.connection-straight { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 12'%3E%3Cline x1='2' y1='6' x2='18' y2='6' stroke='%23666' stroke-width='2'/%3E%3C/svg%3E"); }
+.connection-curved { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 12'%3E%3Cpath d='M2,6 Q10,2 18,6' stroke='%23666' stroke-width='2' fill='none'/%3E%3C/svg%3E"); }
+.connection-orthogonal { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 12'%3E%3Cpath d='M2,6 L10,6 L10,3 L18,3' stroke='%23666' stroke-width='2' fill='none'/%3E%3C/svg%3E"); }
+.connection-bezier { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 12'%3E%3Cpath d='M2,6 C6,2 14,10 18,6' stroke='%23666' stroke-width='2' fill='none'/%3E%3C/svg%3E"); }
+.connection-stepped { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 12'%3E%3Cpath d='M2,6 L6,6 L6,3 L10,3 L10,9 L14,9 L14,6 L18,6' stroke='%23666' stroke-width='2' fill='none'/%3E%3C/svg%3E"); }
+.connection-arc { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 12'%3E%3Cpath d='M2,6 A8,4 0 0,1 18,6' stroke='%23666' stroke-width='2' fill='none'/%3E%3C/svg%3E"); }
+
+/* Form Enhancements for Advanced Options */
+.accordion-button:not(.collapsed) {
+    background-color: #e3f2fd;
+    color: #1976d2;
+}
+
+.accordion-button:focus {
+    border-color: #2196f3;
+    box-shadow: 0 0 0 0.25rem rgba(33, 150, 243, 0.25);
+}
+
+.form-range:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.form-range:focus::-webkit-slider-thumb {
+    box-shadow: 0 0 0 1px #fff, 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.form-range:focus::-moz-range-thumb {
+    box-shadow: 0 0 0 1px #fff, 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Responsive Adjustments for Advanced Features */
 @media (max-width: 768px) {
-    #relationshipManager .btn-group {
-        width: 100%;
-    }
-    
-    #relationshipManager .btn {
-        flex: 1;
-    }
-    
     .c4-relationship-label {
         font-size: 10px;
     }
@@ -620,19 +906,48 @@
     .c4-relationship-tech {
         font-size: 8px;
     }
+    
+    .connection-point {
+        r: 6;
+    }
+    
+    .c4-element:hover .connection-point,
+    .connection-mode-active .connection-point {
+        r: 8;
+    }
+    
+    .connection-preview-container {
+        height: 80px;
+    }
 }
 
-/* Accessibility Enhancements */
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+    .c4-relationship {
+        stroke-width: 3 !important;
+    }
+    
+    .c4-relationship.selected {
+        stroke: #0000ff !important;
+        stroke-width: 4 !important;
+    }
+    
+    .connection-point {
+        stroke: #000;
+        stroke-width: 3;
+    }
+}
+
+/* Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
     .c4-relationship,
     .connection-source,
-    .connection-preview-line {
+    .connection-point.active {
         animation: none;
     }
     
     .c4-relationship.selected {
         animation: none;
         stroke-dasharray: none;
-        stroke-width: 4 !important;
     }
 }

@@ -1447,6 +1447,39 @@
   },
   "components": {
     "schemas": {
+      "ConnectionPoints": {
+        "type": "object",
+        "properties": {
+          "sourceAnchor": {
+            "type": "string",
+            "nullable": true
+          },
+          "targetAnchor": {
+            "type": "string",
+            "nullable": true
+          },
+          "sourceOffset": {
+            "$ref": "#/components/schemas/Position"
+          },
+          "targetOffset": {
+            "$ref": "#/components/schemas/Position"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ControlPoint": {
+        "type": "object",
+        "properties": {
+          "position": {
+            "$ref": "#/components/schemas/Position"
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "CreateDiagramRequest": {
         "required": [
           "name",
@@ -2613,6 +2646,37 @@
           "width": {
             "type": "number",
             "format": "double",
+            "nullable": true
+          },
+          "connectionType": {
+            "type": "string",
+            "nullable": true
+          },
+          "connectionPoints": {
+            "$ref": "#/components/schemas/ConnectionPoints"
+          },
+          "startArrowStyle": {
+            "type": "string",
+            "nullable": true
+          },
+          "pattern": {
+            "type": "string",
+            "nullable": true
+          },
+          "opacity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "shadow": {
+            "type": "string",
+            "nullable": true
+          },
+          "controlPoints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ControlPoint"
+            },
             "nullable": true
           }
         },
